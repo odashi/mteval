@@ -1,7 +1,9 @@
 #ifndef MTEVAL_EVALUATOR_H_
 #define MTEVAL_EVALUATOR_H_
 
-#include <vector>
+#include "utils.h"
+
+#include <string>
 
 namespace MTEval {
 
@@ -14,11 +16,13 @@ public:
     Evaluator() {}
     virtual ~Evaluator() {}
 
-    void addSentence(
-        const std::vector<unsigned int> & reference,
-        const std::vector<unsigned int> & hypothesis) = 0;
+    virtual void reset() = 0;
 
-    double getScore() const = 0;
+    virtual void addSentence(const Sentence & reference, const Sentence & hypothesis) = 0;
+
+    virtual double getScore() const = 0;
+
+    virtual std::string getName() const = 0;
 
 }; // class Evaluator
 
