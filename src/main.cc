@@ -46,6 +46,7 @@ int main(int argc, char * argv[]) {
         !argmap.count("reference") ||
         !argmap.count("hypothesis") ||
         !argmap.count("evaluator")) {
+        cerr << "ERROR: insufficient required options" << endl;
         cerr << "Usage: mteval [options] -e EVAL -r REF -h HYP" << endl;
         cerr << opt << endl;
         return 1;
@@ -53,9 +54,6 @@ int main(int argc, char * argv[]) {
 
     string evaluator_name = argmap["evaluator"].as<string>();
     bool sentence_wise = !!argmap.count("sentence");
-
-    cout << evaluator_name << endl;
-    cout << sentence_wise << endl;
 
     return 0;
 }
