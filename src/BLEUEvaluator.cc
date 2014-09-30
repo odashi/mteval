@@ -3,8 +3,6 @@
 #include <cmath>
 #include <map>
 
-#include <iostream>
-
 using namespace std;
 
 namespace MTEval {
@@ -65,13 +63,11 @@ double BLEUEvaluator::getScore() const {
     for (int n = 0; n < 4; ++n) {
         if (numerators_[n] == 0) return 0.0;
         np += log(static_cast<double>(numerators_[n])) - log(static_cast<double>(denominators_[n]));
-        cout << numerators_[n] << '/' << denominators_[n] << endl;
     }
 
     // calculate brevity penalty
     double bp = 1.0 - static_cast<double>(total_ref_) / total_hyp_;
     if (bp > 0.0) bp = 0.0;
-    cout << total_ref_ << '/' << total_hyp_ << endl;
 
     // calculate final score
     return exp(np / 4.0 + bp);
