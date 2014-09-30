@@ -16,7 +16,7 @@ public:
 
     void reset();
 
-    void addSentence(const Sentence & reference, const Sentence & hyputhesis);
+    void addSentence(const Sentence & reference, const Sentence & hypothesis);
 
     double getScore() const;
 
@@ -27,8 +27,6 @@ private:
     int denominators_[4];
     int total_ref_;
     int total_hyp_;
-
-    Sentence makeNGram(const Sentence & sent, int begin, int n);
 
 }; // class BLEUEvaluator
 

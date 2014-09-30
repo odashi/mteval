@@ -6,6 +6,8 @@ mteval_SOURCES = \
     Dictionary.h \
     Evaluator.h \
     main.cc \
+    RIBESEvaluator.cc \
+    RIBESEvaluator.h \
     utils.h \
     WEREvaluator.cc \
     WEREvaluator.h \

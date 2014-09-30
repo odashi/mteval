@@ -16,7 +16,7 @@ public:
 
     void reset();
 
-    void addSentence(const Sentence & reference, const Sentence & hyputhesis);
+    void addSentence(const Sentence & reference, const Sentence & hypothesis);
 
     double getScore() const;
 

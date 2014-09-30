@@ -1,5 +1,7 @@
 #include "BLEUEvaluator.h"
 
+#include "utils.h"
+
 #include <cmath>
 #include <map>
 
@@ -22,14 +24,6 @@ void BLEUEvaluator::reset() {
     total_hyp_ = 0;
 }
 
-Sentence BLEUEvaluator::makeNGram(const Sentence & sent, int begin, int n) {
-    Sentence ret(n);
-    for (int i = 0; i < n; ++i) {
-        ret[i] = sent[i + begin];
-    }
-    return ret;
-}
-
 void BLEUEvaluator::addSentence(const Sentence & reference, const Sentence & hypothesis) {
     int len_ref = reference.size();
     int len_hyp = hypothesis.size();
@@ -44,11 +38,11 @@ void BLEUEvaluator::addSentence(const Sentence & reference, const Sentence & hyp
         denominators_[n] += len_hyp - n;
 
         for (int k = 0; k + n < len_ref; ++k) {
-            ++possible[makeNGram(reference, k, n + 1)];
+            ++possible[Utility::makeNGram(reference, k, n + 1)];
         }
 
         for (int k = 0; k + n < len_hyp; ++k) {
-            auto it = possible.find(makeNGram(hypothesis, k, n + 1));
+            auto it = possible.find(Utility::makeNGram(hypothesis, k, n + 1));
             if (it != possible.end() && it->second > 0) {
                 --it->second;
                 ++numerators_[n];
