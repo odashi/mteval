@@ -85,7 +85,7 @@ Sentence getSentence(const string & line, Dictionary & dict) {
     vector<string> word_list;
     string trimmed = boost::trim_copy(line);
     if (trimmed.empty()) return Sentence();
-    boost::split(word_list, trimmed, boost::is_space());
+    boost::split(word_list, trimmed, boost::is_space(), boost::algorithm::token_compress_on);
     Sentence sent(word_list.size());
     transform(word_list.begin(), word_list.end(), sent.begin(), [&dict](const string & x) { return dict[x]; });
     return sent;
