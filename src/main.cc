@@ -1,6 +1,8 @@
 #include "utils.h"
 #include "Dictionary.h"
 #include "Evaluator.h"
+
+#include "BLEUEvaluator.h"
 #include "WEREvaluator.h"
 
 #include <boost/algorithm/string.hpp>
@@ -74,6 +76,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
 }
 
 shared_ptr<Evaluator> getEvaluator(const string & name) {
+    if (name == "BLEU") return shared_ptr<Evaluator>(new BLEUEvaluator());
     if (name == "WER") return shared_ptr<Evaluator>(new WEREvaluator());
     throw runtime_error("unknown evaluator name \"" + name + "\"");
 }
@@ -81,6 +84,7 @@ shared_ptr<Evaluator> getEvaluator(const string & name) {
 Sentence getSentence(const string & line, Dictionary & dict) {
     vector<string> word_list;
     string trimmed = boost::trim_copy(line);
+    if (trimmed.empty()) return Sentence();
     boost::split(word_list, trimmed, boost::is_space());
     Sentence sent(word_list.size());
     transform(word_list.begin(), word_list.end(), sent.begin(), [&dict](const string & x) { return dict[x]; });

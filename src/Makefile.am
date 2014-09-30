@@ -1,6 +1,8 @@
 bin_PROGRAMS = mteval
 
 mteval_SOURCES = \
+    BLEUEvaluator.cc \
+    BLEUEvaluator.h \
     Dictionary.h \
     Evaluator.h \
     main.cc \
