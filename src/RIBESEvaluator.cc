@@ -14,17 +14,15 @@ using namespace std;
 namespace MTEval {
 
 RIBESEvaluator::RIBESEvaluator() {
-    reset();
+    resetCumulative();
 }
 
 RIBESEvaluator::~RIBESEvaluator() {}
 
-void RIBESEvaluator::reset() {
-    num_sents_ = 0;
-    total_ = 0.0;
+void RIBESEvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
 }
 
-void RIBESEvaluator::addSentence(const Sentence & reference, const Sentence & hypothesis) {
+void RIBESEvaluator::calculate(const Sentence & reference, const Sentence & hypothesis) {
     int len_ref = reference.size();
     int len_hyp = hypothesis.size();
 
@@ -115,9 +113,14 @@ void RIBESEvaluator::addSentence(const Sentence & reference, const Sentence & hy
     total_ += score;
 }
 
-double RIBESEvaluator::getScore() const {
+double RIBESEvaluator::getCumulative() const {
     if (num_sents_) return total_ / static_cast<double>(num_sents_);
     else return 0.0;
+}
+
+void RIBESEvaluator::resetCumulative() {
+    num_sents_ = 0;
+    total_ = 0.0;
 }
 
 string RIBESEvaluator::getName() const {

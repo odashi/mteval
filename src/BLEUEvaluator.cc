@@ -10,21 +10,15 @@ using namespace std;
 namespace MTEval {
 
 BLEUEvaluator::BLEUEvaluator() {
-    reset();
+    resetCumulative();
 }
 
 BLEUEvaluator::~BLEUEvaluator() {}
 
-void BLEUEvaluator::reset() {
-    for (int n = 0; n < 4; ++n) {
-        numerators_[n] = 0;
-        denominators_[n] = 0;
-    }
-    total_ref_ = 0;
-    total_hyp_ = 0;
+void BLEUEvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
 }
 
-void BLEUEvaluator::addSentence(const Sentence & reference, const Sentence & hypothesis) {
+void BLEUEvaluator::calculate(const Sentence & reference, const Sentence & hypothesis) {
     int len_ref = reference.size();
     int len_hyp = hypothesis.size();
     total_ref_ += len_ref;
@@ -51,7 +45,7 @@ void BLEUEvaluator::addSentence(const Sentence & reference, const Sentence & hyp
     }
 }
 
-double BLEUEvaluator::getScore() const {
+double BLEUEvaluator::getCumulative() const {
     // calculate precision
     double np = 0.0;
     for (int n = 0; n < 4; ++n) {
@@ -65,6 +59,15 @@ double BLEUEvaluator::getScore() const {
 
     // calculate final score
     return exp(np / 4.0 + bp);
+}
+
+void BLEUEvaluator::resetCumulative() {
+    for (int n = 0; n < 4; ++n) {
+        numerators_[n] = 0;
+        denominators_[n] = 0;
+    }
+    total_ref_ = 0;
+    total_hyp_ = 0;
 }
 
 string BLEUEvaluator::getName() const {

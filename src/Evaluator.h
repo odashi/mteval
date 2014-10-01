@@ -16,12 +16,14 @@ public:
     Evaluator() {}
     virtual ~Evaluator() {}
 
-    virtual void reset() = 0;
+    virtual void prepare(const Sentence & reference, const Sentence & hypothesis) = 0;
 
-    virtual void addSentence(const Sentence & reference, const Sentence & hypothesis) = 0;
+    virtual void calculate(const Sentence & reference, const Sentence & hypothesis) = 0;
 
-    virtual double getScore() const = 0;
+    virtual double getCumulative() const = 0;
 
+    virtual void resetCumulative() = 0;
+    
     virtual std::string getName() const = 0;
 
 }; // class Evaluator

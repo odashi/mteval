@@ -14,12 +14,14 @@ public:
     RIBESEvaluator();
     ~RIBESEvaluator();
 
-    void reset();
+    void prepare(const Sentence & reference, const Sentence & hypothesis);
 
-    void addSentence(const Sentence & reference, const Sentence & hypothesis);
+    void calculate(const Sentence & reference, const Sentence & hypothesis);
 
-    double getScore() const;
+    double getCumulative() const;
 
+    void resetCumulative();
+    
     std::string getName() const;
 
 private:

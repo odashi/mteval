@@ -3,6 +3,8 @@
 
 #include "Evaluator.h"
 
+#include <map>
+
 namespace MTEval {
 
 class NISTEvaluator : public Evaluator {
@@ -14,19 +16,25 @@ public:
     NISTEvaluator();
     ~NISTEvaluator();
 
-    void reset();
+    void prepare(const Sentence & reference, const Sentence & hypothesis);
 
-    void addSentence(const Sentence & reference, const Sentence & hypothesis);
+    void calculate(const Sentence & reference, const Sentence & hypothesis);
 
-    double getScore() const;
+    double getCumulative() const;
 
+    void resetCumulative();
+    
     std::string getName() const;
 
 private:
-    int numerators_[4];
-    int denominators_[4];
-    int total_ref_;
-    int total_hyp_;
+    std::map<Sentence, int> freq_;
+    int total_len_ref_;
+    int num_sents_;
+
+    int num_cumulative_;
+    double cumulative_;
+
+    double beta_; // factor of brevity penalty
 
 }; // class NISTEvaluator
 

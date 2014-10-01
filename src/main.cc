@@ -102,7 +102,7 @@ void printScores(const vector<shared_ptr<Evaluator> > & evaluators) {
     }
     for (size_t i = 0; i < evaluators.size(); ++i) {
         if (i > 0) cout << '\t';
-        cout << (boost::format("%s=%.6f") % evaluators[i]->getName() % evaluators[i]->getScore());
+        cout << (boost::format("%s=%.6f") % evaluators[i]->getName() % evaluators[i]->getCumulative());
     }
     cout << endl;
 }
@@ -142,22 +142,37 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    // analyze
-
     Dictionary dict;
     string line_ref, line_hyp;
+
+    // prepare evaluator
 
     while (getline(ifs_ref, line_ref) && getline(ifs_hyp, line_hyp)) {
         Sentence sent_ref = getSentence(line_ref, dict);
         Sentence sent_hyp = getSentence(line_hyp, dict);
         for (auto & ev : evaluators) {
-            ev->addSentence(sent_ref, sent_hyp);
+            ev->prepare(sent_ref, sent_hyp);
+        }
+    }
+
+    // analyze
+
+    ifs_ref.clear();
+    ifs_hyp.clear();
+    ifs_ref.seekg(0, ios::beg);
+    ifs_hyp.seekg(0, ios::beg);
+
+    while (getline(ifs_ref, line_ref) && getline(ifs_hyp, line_hyp)) {
+        Sentence sent_ref = getSentence(line_ref, dict);
+        Sentence sent_hyp = getSentence(line_hyp, dict);
+        for (auto & ev : evaluators) {
+            ev->calculate(sent_ref, sent_hyp);
         }
         if (sentence_wise) {
             // print sentence-wise scores
             printScores(evaluators);
             for (auto & ev : evaluators) {
-                ev->reset();
+                ev->resetCumulative();
             }
         }
     }

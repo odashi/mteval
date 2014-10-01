@@ -5,17 +5,15 @@ using namespace std;
 namespace MTEval {
 
 WEREvaluator::WEREvaluator() {
-    reset();
+    resetCumulative();
 }
 
 WEREvaluator::~WEREvaluator() {}
 
-void WEREvaluator::reset() {
-    num_sents_ = 0;
-    total_ = 0.0;
+void WEREvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
 }
 
-void WEREvaluator::addSentence(const Sentence & reference, const Sentence & hypothesis) {
+void WEREvaluator::calculate(const Sentence & reference, const Sentence & hypothesis) {
     ++num_sents_;
 
     int len_ref = reference.size();
@@ -45,9 +43,14 @@ void WEREvaluator::addSentence(const Sentence & reference, const Sentence & hypo
     total_ += static_cast<double>(dp[len_ref][len_hyp]) / len_ref;
 }
 
-double WEREvaluator::getScore() const {
+double WEREvaluator::getCumulative() const {
     if (num_sents_) return total_ / static_cast<double>(num_sents_);
     else return 0.0;
+}
+
+void WEREvaluator::resetCumulative() {
+    num_sents_ = 0;
+    total_ = 0.0;
 }
 
 string WEREvaluator::getName() const {
