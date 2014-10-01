@@ -52,7 +52,6 @@ void NISTEvaluator::calculate(const Sentence & reference, const Sentence & hypot
     map<Sentence, int> possible;
     int max_n = len_hyp < 5 ? len_hyp : 5;
     double score = 0.0;
-    const double log_2 = log(2.0);
 
     for (int n = 0; n < max_n; ++n) {
         double sum = 0;
@@ -67,7 +66,7 @@ void NISTEvaluator::calculate(const Sentence & reference, const Sentence & hypot
             auto it = possible.find(ngram);
             if (it != possible.end() && it->second > 0) {
                 --it->second;
-                sum += log(static_cast<double>(freq_[context]) / freq_[ngram]) / log_2;
+                sum += log(static_cast<double>(freq_[context]) / freq_[ngram]);
             }
         }
 
@@ -79,7 +78,7 @@ void NISTEvaluator::calculate(const Sentence & reference, const Sentence & hypot
 }
 
 double NISTEvaluator::getCumulative() const {
-    if (num_cumulative_) return cumulative_ / num_cumulative_;
+    if (num_cumulative_) return cumulative_ / (num_cumulative_ * log(2.0));
     else return 0.0;
 }
 
