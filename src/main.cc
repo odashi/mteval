@@ -3,6 +3,7 @@
 #include "Evaluator.h"
 
 #include "BLEUEvaluator.h"
+#include "NISTEvaluator.h"
 #include "RIBESEvaluator.h"
 #include "WEREvaluator.h"
 
@@ -78,6 +79,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
 
 shared_ptr<Evaluator> getEvaluator(const string & name) {
     if (name == "BLEU") return shared_ptr<Evaluator>(new BLEUEvaluator());
+    if (name == "NIST") return shared_ptr<Evaluator>(new NISTEvaluator());
     if (name == "RIBES") return shared_ptr<Evaluator>(new RIBESEvaluator());
     if (name == "WER") return shared_ptr<Evaluator>(new WEREvaluator());
     throw runtime_error("unknown evaluator name \"" + name + "\"");
