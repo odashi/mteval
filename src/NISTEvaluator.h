@@ -28,11 +28,11 @@ public:
 
 private:
     std::map<Sentence, int> freq_;
-    int total_len_ref_;
-    int num_sents_;
 
-    int num_cumulative_;
-    double cumulative_;
+    double numerators_[5];
+    int denominators_[5];
+    int total_len_ref_;
+    int total_len_hyp_;
 
     double beta_; // factor of brevity penalty
 
