@@ -1,6 +1,6 @@
-#include "BLEUEvaluator.h"
+#include <mteval/BLEUEvaluator.h>
 
-#include "utils.h"
+#include <mteval/utils.h>
 
 #include <cmath>
 #include <map>

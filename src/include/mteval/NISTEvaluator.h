@@ -1,7 +1,7 @@
 #ifndef MTEVAL_NIST_EVALUATOR_H_
 #define MTEVAL_NIST_EVALUATOR_H_
 
-#include "Evaluator.h"
+#include <mteval/Evaluator.h>
 
 #include <map>
 

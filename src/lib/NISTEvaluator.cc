@@ -1,6 +1,6 @@
-#include "NISTEvaluator.h"
+#include <mteval/NISTEvaluator.h>
 
-#include "utils.h"
+#include <mteval/utils.h>
 
 #include <cmath>
 

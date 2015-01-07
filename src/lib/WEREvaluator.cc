@@ -1,4 +1,4 @@
-#include "WEREvaluator.h"
+#include <mteval/WEREvaluator.h>
 
 using namespace std;
 

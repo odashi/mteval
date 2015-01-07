@@ -1,7 +1,7 @@
 #ifndef MTEVAL_BLEU_EVALUATOR_H_
 #define MTEVAL_BLEU_EVALUATOR_H_
 
-#include "Evaluator.h"
+#include <mteval/Evaluator.h>
 
 namespace MTEval {
 

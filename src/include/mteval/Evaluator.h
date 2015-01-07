@@ -1,7 +1,7 @@
 #ifndef MTEVAL_EVALUATOR_H_
 #define MTEVAL_EVALUATOR_H_
 
-#include "utils.h"
+#include <mteval/utils.h>
 
 #include <string>
 

@@ -1,11 +1,11 @@
-#include "utils.h"
-#include "Dictionary.h"
-#include "Evaluator.h"
+#include <mteval/utils.h>
+#include <mteval/Dictionary.h>
+#include <mteval/Evaluator.h>
 
-#include "BLEUEvaluator.h"
-#include "NISTEvaluator.h"
-#include "RIBESEvaluator.h"
-#include "WEREvaluator.h"
+#include <mteval/BLEUEvaluator.h>
+#include <mteval/NISTEvaluator.h>
+#include <mteval/RIBESEvaluator.h>
+#include <mteval/WEREvaluator.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>

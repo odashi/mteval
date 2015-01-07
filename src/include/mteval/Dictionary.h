@@ -1,7 +1,7 @@
 #ifndef MTEVAL_DICTIONARY_H_
 #define MTEVAL_DICTIONARY_H_
 
-#include "utils.h"
+#include <mteval/utils.h>
 
 #include <map>
 #include <string>

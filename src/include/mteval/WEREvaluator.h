@@ -1,18 +1,18 @@
-#ifndef MTEVAL_RIBES_EVALUATOR_H_
-#define MTEVAL_RIBES_EVALUATOR_H_
+#ifndef MTEVAL_WER_EVALUATOR_H_
+#define MTEVAL_WER_EVALUATOR_H_
 
-#include "Evaluator.h"
+#include <mteval/Evaluator.h>
 
 namespace MTEval {
 
-class RIBESEvaluator : public Evaluator {
+class WEREvaluator : public Evaluator {
 
-    RIBESEvaluator(const RIBESEvaluator &) = delete;
-    RIBESEvaluator & operator=(const RIBESEvaluator &) = delete;
+    WEREvaluator(const WEREvaluator &) = delete;
+    WEREvaluator & operator=(const WEREvaluator &) = delete;
 
 public:
-    RIBESEvaluator();
-    ~RIBESEvaluator();
+    WEREvaluator();
+    ~WEREvaluator();
 
     void prepare(const Sentence & reference, const Sentence & hypothesis);
 
@@ -28,9 +28,9 @@ private:
     unsigned int num_sents_;
     double total_;
 
-}; // class RIBESEvaluator
+}; // class WEREvaluator
 
 } // namespace MTEval
 
-#endif // MTEVAL_RIBES_EVALUATOR_H_
+#endif // MTEVAL_WER_EVALUATOR_H_
 
