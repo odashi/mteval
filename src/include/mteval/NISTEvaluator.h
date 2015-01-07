@@ -34,8 +34,6 @@ private:
     int total_len_ref_;
     int total_len_hyp_;
 
-    double beta_; // factor of brevity penalty
-
 }; // class NISTEvaluator
 
 } // namespace MTEval

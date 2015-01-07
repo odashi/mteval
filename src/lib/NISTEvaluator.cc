@@ -9,11 +9,6 @@ using namespace std;
 namespace MTEval {
 
 NISTEvaluator::NISTEvaluator() {
-    // beta = -ln2 / (ln3 - ln2)^2
-    // note: bp = 0.5 when |hyp|/E[|ref|] == 2/3
-    beta_ = log(3.0) - log(2.0);
-    beta_ = -log(2.0) / (beta_ * beta_);
-
     resetCumulative();
 }
 
@@ -63,18 +58,29 @@ void NISTEvaluator::calculate(const Sentence & reference, const Sentence & hypot
 }
 
 double NISTEvaluator::getCumulative() const {
+    
+    // beta = -ln2 / (ln3 - ln2)^2
+    // note: bp = 0.5 when |hyp|/E[|ref|] == 2/3
+    constexpr double log_2 = log(2.0);
+    constexpr double base = log(3.0) - log_2;
+    constexpr double beta = -log_2 / (base * base);
+
     // calculate n-gram score
     double np = 0.0;
-    double log_2 = log(2.0);
     for (int n = 0; n < 5; ++n) {
-        np += numerators_[n] / (denominators_[n] * log_2);
+        if (denominators_[n] > 0.0) {
+            np += numerators_[n] / (denominators_[n] * log_2);
+        }
     }
 
     // calculate brevity penalty
-    double bp = static_cast<double>(total_len_hyp_) / total_len_ref_;
-    bp = log(bp < 1.0 ? bp : 1.0);
-    bp = exp(beta_ * bp * bp);
-    
+    double bp = 1.0;
+    if (total_len_ref_ > 0.0) {
+        bp = static_cast<double>(total_len_hyp_) / total_len_ref_;
+        bp = log(bp < 1.0 ? bp : 1.0);
+        bp = exp(beta * bp * bp);
+    }
+
     // calculate final score
     return np * bp;
 }
