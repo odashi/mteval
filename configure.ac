@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([mteval], [0.1.0], [yus.takara@gmail.com])
 AM_INIT_AUTOMAKE()
-AC_CONFIG_SRCDIR([src/bin/main.cc])
+AC_CONFIG_SRCDIR([src/bin/mteval-corpus.cc])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.

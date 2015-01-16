@@ -21,6 +21,7 @@ using namespace MTEval;
 
 boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     namespace OPT = boost::program_options;
+    string binname = "mteval-corpus";
 
     // set options
 
@@ -50,7 +51,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     // process usage
 
     if (args.count("help")) {
-        cerr << "Usage: mteval [options] -e EVAL1,EVAL2,... -r REF -h HYP" << endl;
+        cerr << "Usage: " << binname << " [options] -e EVAL1,EVAL2,... -r REF -h HYP" << endl;
         cerr << opt << endl;
         exit(1);
     }
