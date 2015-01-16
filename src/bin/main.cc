@@ -44,12 +44,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     // parse
 
     OPT::variables_map args;
-    try {
-        OPT::store(OPT::parse_command_line(argc, argv, opt), args);
-    } catch (exception & ex) {
-        cerr << "ERROR: " << ex.what() << endl;
-        exit(1);
-    }
+    OPT::store(OPT::parse_command_line(argc, argv, opt), args);
     OPT::notify(args);
 
     // process usage

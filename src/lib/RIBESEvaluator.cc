@@ -70,7 +70,7 @@ void RIBESEvaluator::calculate(const Sentence & reference, const Sentence & hypo
                         Sentence ngram = Utility::makeNGram(hypothesis, i - window, window + 1);
                         if (Utility::countOverlapping(ngram, reference) == 1 &&
                             Utility::countOverlapping(ngram, hypothesis) == 1) {
-                            aligned.push_back(Utility::search(ngram, reference) + window);
+                            aligned.push_back(Utility::findSubsentence(ngram, reference) + window);
                             break;
                         }
                     }
@@ -78,7 +78,7 @@ void RIBESEvaluator::calculate(const Sentence & reference, const Sentence & hypo
                         Sentence ngram = Utility::makeNGram(hypothesis, i, window + 1);
                         if (Utility::countOverlapping(ngram, reference) == 1 &&
                             Utility::countOverlapping(ngram, hypothesis) == 1) {
-                            aligned.push_back(Utility::search(ngram, reference));
+                            aligned.push_back(Utility::findSubsentence(ngram, reference));
                             break;
                         }
                     }

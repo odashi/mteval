@@ -19,53 +19,13 @@ class Utility {
     Utility & operator=(const Utility &) = delete;
 
 public:
-    static Sentence makeNGram(const Sentence & sent, size_t begin, size_t n) {
-        if (begin + n > sent.size()) throw std::runtime_error("out of range");
-        Sentence ret(n);
-        for (size_t i = 0; i < n; ++i) ret[i] = sent[i + begin];
-        return ret;
-    }
+    // calculation utils
+    static Sentence makeNGram(const Sentence & sent, size_t begin, size_t n);
+    static int countOverlapping(const Sentence & pattern, const Sentence & sent);
+    static int findSubsentence(const Sentence & pattern, const Sentence & sent);
 
-    static int countOverlapping(const Sentence & pattern, const Sentence & sent) {
-        int n = 0;
-        int len_pattern = pattern.size();
-        int max_k = sent.size() - len_pattern + 1;
-        for (int k = 0; k < max_k; ++k) {
-            int m = 1;
-            for (int i = 0; i < len_pattern; ++i) {
-                if (sent[k + i] != pattern[i]) {
-                    m = 0;
-                    break;
-                }
-            }
-            n += m;
-        }
-        return n;
-    }
-
-    static int search(const Sentence & pattern, const Sentence & sent) {
-        int len_pattern = pattern.size();
-        int max_k = sent.size() - len_pattern + 1;
-        for (int k = 0; k < max_k; ++k) {
-            bool p = true;
-            for (int i = 0; i < len_pattern; ++i) {
-                if (sent[k + i] != pattern[i]) {
-                    p = false;
-                    break;
-                }
-            }
-            if (p) return k;
-        }
-        return -1;
-    }
-
-    static std::unique_ptr<std::ifstream> openInputStream(const std::string & filename) {
-        std::unique_ptr<std::ifstream> ifs(new std::ifstream(filename));
-        if (!ifs->is_open()) {
-            throw std::runtime_error("could not open \"" + filename + "\"");
-        }
-        return ifs;
-    }
+    // IO utils
+    static std::unique_ptr<std::ifstream> openInputStream(const std::string & filename);
 
 }; // class Utility
 
