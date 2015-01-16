@@ -21,8 +21,8 @@ using namespace MTEval;
 
 boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     namespace OPT = boost::program_options;
-    string description = "Calculate corpus-wise evaluation metrics";
-    string binname = "mteval-corpus";
+    string description = "Calculate sentence-wise evaluation metrics";
+    string binname = "mteval-sentence";
 
     // set options
 
@@ -129,7 +129,7 @@ int main(int argc, char * argv[]) {
         ifs_hyp->clear();
         ifs_ref->seekg(0, ios::beg);
         ifs_hyp->seekg(0, ios::beg);
-        
+
         // analyze
         while (getline(*ifs_ref, line_ref) && getline(*ifs_hyp, line_hyp)) {
             Sentence sent_ref = getSentence(line_ref, dict);
@@ -137,10 +137,13 @@ int main(int argc, char * argv[]) {
             for (auto & ev : evaluators) {
                 ev->calculate(sent_ref, sent_hyp);
             }
-        }
 
-        // print corpus scores
-        printScores(evaluators);
+            // print sentence-wise scores
+            printScores(evaluators);
+            for (auto & ev : evaluators) {
+                ev->resetCumulative();
+            }
+        }
 
     } catch (exception & ex) {
         cerr << "ERROR: " << ex.what() << endl;
