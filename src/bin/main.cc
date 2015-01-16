@@ -1,11 +1,7 @@
 #include <mteval/utils.h>
 #include <mteval/Dictionary.h>
 #include <mteval/Evaluator.h>
-
-#include <mteval/BLEUEvaluator.h>
-#include <mteval/NISTEvaluator.h>
-#include <mteval/RIBESEvaluator.h>
-#include <mteval/WEREvaluator.h>
+#include <mteval/EvaluatorFactory.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
@@ -77,14 +73,6 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     return move(args);
 }
 
-shared_ptr<Evaluator> getEvaluator(const string & name) {
-    if (name == "BLEU") return shared_ptr<Evaluator>(new BLEUEvaluator());
-    if (name == "NIST") return shared_ptr<Evaluator>(new NISTEvaluator());
-    if (name == "RIBES") return shared_ptr<Evaluator>(new RIBESEvaluator());
-    if (name == "WER") return shared_ptr<Evaluator>(new WEREvaluator());
-    throw runtime_error("unknown evaluator name \"" + name + "\"");
-}
-
 Sentence getSentence(const string & line, Dictionary & dict) {
     vector<string> word_list;
     string trimmed = boost::trim_copy(line);
@@ -108,78 +96,71 @@ void printScores(const vector<shared_ptr<Evaluator> > & evaluators) {
 }
 
 int main(int argc, char * argv[]) {
-    auto args = parseOptions(argc, argv);
-
-    vector<string> evaluator_names;
-    boost::split(evaluator_names, args["evaluator"].as<string>(), boost::is_any_of(","));
-    string filename_ref = args["reference"].as<string>();
-    string filename_hyp = args["hypothesis"].as<string>();
-    bool sentence_wise = !!args.count("sentence");
-
-    // get evaluators
-
-    vector<shared_ptr<Evaluator> > evaluators;
+    
     try {
+
+        auto args = parseOptions(argc, argv);
+
+        vector<string> evaluator_names;
+        boost::split(evaluator_names, args["evaluator"].as<string>(), boost::is_any_of(","));
+        string filename_ref = args["reference"].as<string>();
+        string filename_hyp = args["hypothesis"].as<string>();
+        bool sentence_wise = !!args.count("sentence");
+
+        // get evaluators
+
+        vector<shared_ptr<Evaluator> > evaluators;
         for (const string & name : evaluator_names) {
-            evaluators.push_back(getEvaluator(name));
+            evaluators.push_back(EvaluatorFactory::create(name));
         }
-    } catch (exception & ex) {
-        cerr << "ERROR: " << ex.what() << endl;
-        exit(1);
-    }
 
-    // open files
+        // open files
+        unique_ptr<ifstream> ifs_ref = Utility::openInputStream(filename_ref);
+        unique_ptr<ifstream> ifs_hyp = Utility::openInputStream(filename_hyp);
 
-    ifstream ifs_ref(filename_ref);
-    if (!ifs_ref.is_open()) {
-        cerr << "ERROR: cannot open " + filename_ref << endl;
-        exit(1);
-    }
+        Dictionary dict;
+        string line_ref, line_hyp;
 
-    ifstream ifs_hyp(filename_hyp);
-    if (!ifs_hyp.is_open()) {
-        cerr << "ERROR: cannot open " + filename_hyp << endl;
-        exit(1);
-    }
+        // prepare evaluator
 
-    Dictionary dict;
-    string line_ref, line_hyp;
-
-    // prepare evaluator
-
-    while (getline(ifs_ref, line_ref) && getline(ifs_hyp, line_hyp)) {
-        Sentence sent_ref = getSentence(line_ref, dict);
-        Sentence sent_hyp = getSentence(line_hyp, dict);
-        for (auto & ev : evaluators) {
-            ev->prepare(sent_ref, sent_hyp);
-        }
-    }
-
-    // analyze
-
-    ifs_ref.clear();
-    ifs_hyp.clear();
-    ifs_ref.seekg(0, ios::beg);
-    ifs_hyp.seekg(0, ios::beg);
-
-    while (getline(ifs_ref, line_ref) && getline(ifs_hyp, line_hyp)) {
-        Sentence sent_ref = getSentence(line_ref, dict);
-        Sentence sent_hyp = getSentence(line_hyp, dict);
-        for (auto & ev : evaluators) {
-            ev->calculate(sent_ref, sent_hyp);
-        }
-        if (sentence_wise) {
-            // print sentence-wise scores
-            printScores(evaluators);
+        while (getline(*ifs_ref, line_ref) && getline(*ifs_hyp, line_hyp)) {
+            Sentence sent_ref = getSentence(line_ref, dict);
+            Sentence sent_hyp = getSentence(line_hyp, dict);
             for (auto & ev : evaluators) {
-                ev->resetCumulative();
+                ev->prepare(sent_ref, sent_hyp);
             }
         }
-    }
 
-    if (!sentence_wise) {
-        // print corpus scores
-        printScores(evaluators);
+        // analyze
+
+        ifs_ref->clear();
+        ifs_hyp->clear();
+        ifs_ref->seekg(0, ios::beg);
+        ifs_hyp->seekg(0, ios::beg);
+
+        while (getline(*ifs_ref, line_ref) && getline(*ifs_hyp, line_hyp)) {
+            Sentence sent_ref = getSentence(line_ref, dict);
+            Sentence sent_hyp = getSentence(line_hyp, dict);
+            for (auto & ev : evaluators) {
+                ev->calculate(sent_ref, sent_hyp);
+            }
+            if (sentence_wise) {
+                // print sentence-wise scores
+                printScores(evaluators);
+                for (auto & ev : evaluators) {
+                    ev->resetCumulative();
+                }
+            }
+        }
+
+        if (!sentence_wise) {
+            // print corpus scores
+            printScores(evaluators);
+        }
+
+    } catch (exception & ex) {
+        cerr << "ERROR: " << ex.what() << endl;
+        return 1;
     }
 
     return 0;

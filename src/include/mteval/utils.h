@@ -1,8 +1,10 @@
 #ifndef MTEVAL_UTILS_H_
 #define MTEVAL_UTILS_H_
 
-#include <vector>
+#include <fstream>
+#include <memory>
 #include <stdexcept>
+#include <vector>
 
 namespace MTEval {
 
@@ -55,6 +57,14 @@ public:
             if (p) return k;
         }
         return -1;
+    }
+
+    static std::unique_ptr<std::ifstream> openInputStream(const std::string & filename) {
+        std::unique_ptr<std::ifstream> ifs(new std::ifstream(filename));
+        if (!ifs->is_open()) {
+            throw std::runtime_error("could not open \"" + filename + "\"");
+        }
+        return ifs;
     }
 
 }; // class Utility
