@@ -4,7 +4,9 @@ using namespace std;
 
 namespace MTEval {
 
-WEREvaluator::WEREvaluator() {
+WEREvaluator::WEREvaluator(const vector<EvaluatorParam> & params)
+    : Evaluator(params) {
+
     resetCumulative();
 }
 

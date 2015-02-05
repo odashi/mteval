@@ -11,7 +11,7 @@ class WEREvaluator : public Evaluator {
     WEREvaluator & operator=(const WEREvaluator &) = delete;
 
 public:
-    WEREvaluator();
+    WEREvaluator(const std::vector<EvaluatorParam> & params);
     ~WEREvaluator();
 
     void prepare(const Sentence & reference, const Sentence & hypothesis);

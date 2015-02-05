@@ -4,8 +4,15 @@
 #include <mteval/utils.h>
 
 #include <string>
+#include <vector>
 
 namespace MTEval {
+
+struct EvaluatorParam {
+    std::string name;
+    int int_val;
+    double real_val;
+}; // struct EvaluatorParam
 
 class Evaluator {
 
@@ -13,7 +20,7 @@ class Evaluator {
     Evaluator & operator =(const Evaluator &) = delete;
 
 public:
-    Evaluator() {}
+    Evaluator(const std::vector<EvaluatorParam> & params) {}
     virtual ~Evaluator() {}
 
     virtual void prepare(const Sentence & reference, const Sentence & hypothesis) = 0;

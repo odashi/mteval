@@ -37,7 +37,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
         ;
     OPT::options_description opt_config("Configurations");
     opt_config.add_options()
-        ("evaluator,e", OPT::value<vector<string> >()->multitoken(), "(required) evaluator names")
+        ("evaluator,e", OPT::value<vector<string> >()->multitoken(), "(required) evaluator descriptions")
         ;
     OPT::options_description opt;
     opt.add(opt_generic).add(opt_input).add(opt_config);
@@ -104,8 +104,8 @@ int main(int argc, char * argv[]) {
 
         // get evaluators
         vector<shared_ptr<Evaluator> > evaluators;
-        for (const string & name : evaluator_desc) {
-            evaluators.push_back(EvaluatorFactory::create(name));
+        for (const string & desc : evaluator_desc) {
+            evaluators.push_back(EvaluatorFactory::create(desc));
         }
 
         // open files

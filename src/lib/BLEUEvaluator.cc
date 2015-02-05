@@ -9,7 +9,9 @@ using namespace std;
 
 namespace MTEval {
 
-BLEUEvaluator::BLEUEvaluator() {
+BLEUEvaluator::BLEUEvaluator(const vector<EvaluatorParam> & params)
+    : Evaluator(params) {
+    
     resetCumulative();
 }
 

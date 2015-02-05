@@ -11,7 +11,7 @@ class RIBESEvaluator : public Evaluator {
     RIBESEvaluator & operator=(const RIBESEvaluator &) = delete;
 
 public:
-    RIBESEvaluator();
+    RIBESEvaluator(const std::vector<EvaluatorParam> & params);
     ~RIBESEvaluator();
 
     void prepare(const Sentence & reference, const Sentence & hypothesis);

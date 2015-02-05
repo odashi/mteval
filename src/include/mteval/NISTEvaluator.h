@@ -13,7 +13,7 @@ class NISTEvaluator : public Evaluator {
     NISTEvaluator & operator=(const NISTEvaluator &) = delete;
 
 public:
-    NISTEvaluator();
+    NISTEvaluator(const std::vector<EvaluatorParam> & params);
     ~NISTEvaluator();
 
     void prepare(const Sentence & reference, const Sentence & hypothesis);

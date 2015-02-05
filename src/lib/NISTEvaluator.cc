@@ -8,7 +8,9 @@ using namespace std;
 
 namespace MTEval {
 
-NISTEvaluator::NISTEvaluator() {
+NISTEvaluator::NISTEvaluator(const vector<EvaluatorParam> & params)
+    : Evaluator(params) {
+
     resetCumulative();
 }
 

@@ -11,7 +11,7 @@ class BLEUEvaluator : public Evaluator {
     BLEUEvaluator & operator=(const BLEUEvaluator &) = delete;
 
 public:
-    BLEUEvaluator();
+    BLEUEvaluator(const std::vector<EvaluatorParam> & params);
     ~BLEUEvaluator();
 
     void prepare(const Sentence & reference, const Sentence & hypothesis);

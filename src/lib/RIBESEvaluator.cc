@@ -13,7 +13,9 @@ using namespace std;
 
 namespace MTEval {
 
-RIBESEvaluator::RIBESEvaluator() {
+RIBESEvaluator::RIBESEvaluator(const vector<EvaluatorParam> & params)
+    : Evaluator(params) {
+
     resetCumulative();
 }
 
