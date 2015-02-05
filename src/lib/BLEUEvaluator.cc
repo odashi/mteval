@@ -10,7 +10,12 @@ using namespace std;
 namespace MTEval {
 
 BLEUEvaluator::BLEUEvaluator(const vector<EvaluatorParam> & params)
-    : Evaluator(params) {
+    : Evaluator(params)
+    , smooth_(0.0) {
+
+    for (auto & p : params) {
+        if (p.name == "smooth") smooth_ = p.real_val;
+    }
     
     resetCumulative();
 }
@@ -64,9 +69,11 @@ double BLEUEvaluator::getCumulative() const {
 }
 
 void BLEUEvaluator::resetCumulative() {
+    numerators_[0] = 0;
+    denominators_[0] = 0;
     for (int n = 0; n < 4; ++n) {
-        numerators_[n] = 0;
-        denominators_[n] = 0;
+        numerators_[n] = smooth_;
+        denominators_[n] = smooth_;
     }
     total_ref_ = 0;
     total_hyp_ = 0;

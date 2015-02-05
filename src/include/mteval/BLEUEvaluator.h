@@ -30,6 +30,9 @@ private:
     int total_ref_;
     int total_hyp_;
 
+    // hyperparameters
+    double smooth_;
+
 }; // class BLEUEvaluator
 
 } // namespace MTEval
