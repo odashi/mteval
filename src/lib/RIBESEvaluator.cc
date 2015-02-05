@@ -14,7 +14,14 @@ using namespace std;
 namespace MTEval {
 
 RIBESEvaluator::RIBESEvaluator(const vector<EvaluatorParam> & params)
-    : Evaluator(params) {
+    : Evaluator(params)
+    , alpha_(0.25)
+    , beta_(0.1) {
+
+    for (auto & p : params) {
+        if (p.name == "alpha") alpha_ = p.real_val;
+        else if (p.name == "beta") beta_ = p.real_val;
+    }
 
     resetCumulative();
 }
@@ -109,7 +116,7 @@ void RIBESEvaluator::calculate(const Sentence & reference, const Sentence & hypo
     }
 
     // calculate final score
-    double score = nkt * pow(prec, 0.25) * pow(bp, 0.1);
+    double score = nkt * pow(prec, alpha_) * pow(bp, beta_);
 
     ++num_sents_;
     total_ += score;

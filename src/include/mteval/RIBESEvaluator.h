@@ -28,6 +28,10 @@ private:
     unsigned int num_sents_;
     double total_;
 
+    // hyperparameters
+    double alpha_;
+    double beta_;
+
 }; // class RIBESEvaluator
 
 } // namespace MTEval
