@@ -37,7 +37,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
         ;
     OPT::options_description opt_config("Configurations");
     opt_config.add_options()
-        ("evaluator,e", OPT::value<vector<string> >(), "(required) evaluator names")
+        ("evaluator,e", OPT::value<vector<string> >()->multitoken(), "(required) evaluator names")
         ;
     OPT::options_description opt;
     opt.add(opt_generic).add(opt_input).add(opt_config);
