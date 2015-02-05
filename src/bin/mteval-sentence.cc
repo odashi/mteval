@@ -32,12 +32,12 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
         ;
     OPT::options_description opt_input("Input files");
     opt_input.add_options()
-        ("reference,r", OPT::value<string>(), "[required] reference file")
-        ("hypothesis,h", OPT::value<string>(), "[required] hypothesis file")
+        ("reference,r", OPT::value<string>(), "(required) reference file")
+        ("hypothesis,h", OPT::value<string>(), "(required) hypothesis file")
         ;
     OPT::options_description opt_config("Configurations");
     opt_config.add_options()
-        ("evaluator,e", OPT::value<string>(), "[required] evaluator names (e.x. \'BLEU,RIBES,WER\')")
+        ("evaluator,e", OPT::value<vector<string> >(), "(required) evaluator names")
         ;
     OPT::options_description opt;
     opt.add(opt_generic).add(opt_input).add(opt_config);
@@ -52,7 +52,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
 
     if (args.count("help")) {
         cerr << description << endl;
-        cerr << "Usage: " << binname << " [options] -e EVAL1,EVAL2,... -r REF -h HYP" << endl;
+        cerr << "Usage: " << binname << " [options] -e EVAL1 EVAL2 ... -r REF -h HYP" << endl;
         cerr << opt << endl;
         exit(1);
     }
@@ -98,14 +98,13 @@ int main(int argc, char * argv[]) {
 
         auto args = parseOptions(argc, argv);
 
-        vector<string> evaluator_names;
-        boost::split(evaluator_names, args["evaluator"].as<string>(), boost::is_any_of(","));
+        vector<string> evaluator_desc = args["evaluator"].as<vector<string> >();
         string filename_ref = args["reference"].as<string>();
         string filename_hyp = args["hypothesis"].as<string>();
 
         // get evaluators
         vector<shared_ptr<Evaluator> > evaluators;
-        for (const string & name : evaluator_names) {
+        for (const string & name : evaluator_desc) {
             evaluators.push_back(EvaluatorFactory::create(name));
         }
 
