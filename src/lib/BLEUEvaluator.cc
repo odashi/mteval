@@ -11,9 +11,11 @@ namespace MTEval {
 
 BLEUEvaluator::BLEUEvaluator(const vector<EvaluatorParam> & params)
     : Evaluator(params)
+    , ngram_(4)
     , smooth_(0.0) {
 
     for (auto & p : params) {
+        if (p.name == "ngram") ngram_ = p.int_val;
         if (p.name == "smooth") smooth_ = p.real_val;
     }
     
@@ -32,7 +34,7 @@ void BLEUEvaluator::calculate(const Sentence & reference, const Sentence & hypot
     total_hyp_ += len_hyp;
 
     map<Sentence, int> possible;
-    int max_n = len_hyp < 4 ? len_hyp : 4;
+    int max_n = len_hyp < ngram_ ? len_hyp : ngram_;
 
     // gather statistics
     for (int n = 0; n < max_n; ++n) {
@@ -55,9 +57,16 @@ void BLEUEvaluator::calculate(const Sentence & reference, const Sentence & hypot
 double BLEUEvaluator::getCumulative() const {
     // calculate precision
     double np = 0.0;
-    for (int n = 0; n < 4; ++n) {
+    for (int n = 0; n < ngram_; ++n) {
         if (numerators_[n] == 0) return 0.0;
-        np += log(static_cast<double>(numerators_[n])) - log(static_cast<double>(denominators_[n]));
+        double nn = static_cast<double>(numerators_[n]);
+        double dd = static_cast<double>(denominators_[n]);
+        if (n > 0) {
+            // smoothing
+            nn += smooth_;
+            dd += smooth_;
+        }
+        np += log(nn) - log(dd);
     }
 
     // calculate brevity penalty
@@ -65,16 +74,12 @@ double BLEUEvaluator::getCumulative() const {
     if (bp > 0.0) bp = 0.0;
 
     // calculate final score
-    return exp(np / 4.0 + bp);
+    return exp(np / static_cast<double>(ngram_) + bp);
 }
 
 void BLEUEvaluator::resetCumulative() {
-    numerators_[0] = 0;
-    denominators_[0] = 0;
-    for (int n = 0; n < 4; ++n) {
-        numerators_[n] = smooth_;
-        denominators_[n] = smooth_;
-    }
+    numerators_.assign(ngram_, 0);
+    denominators_.assign(ngram_, 0);
     total_ref_ = 0;
     total_hyp_ = 0;
 }
