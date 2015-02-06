@@ -4,6 +4,7 @@
 #include <mteval/Evaluator.h>
 
 #include <map>
+#include <vector>
 
 namespace MTEval {
 
@@ -29,10 +30,13 @@ public:
 private:
     std::map<Sentence, int> freq_;
 
-    double numerators_[5];
-    int denominators_[5];
+    std::vector<double> numerators_;
+    std::vector<int> denominators_;
     int total_len_ref_;
     int total_len_hyp_;
+
+    // hyperparameters
+    int ngram_;
 
 }; // class NISTEvaluator
 

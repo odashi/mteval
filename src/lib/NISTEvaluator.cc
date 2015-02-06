@@ -9,7 +9,12 @@ using namespace std;
 namespace MTEval {
 
 NISTEvaluator::NISTEvaluator(const vector<EvaluatorParam> & params)
-    : Evaluator(params) {
+    : Evaluator(params)
+    , ngram_(5) {
+
+    for (auto & p : params) {
+        if (p.name == "ngram") ngram_ = p.int_val;
+    }
 
     resetCumulative();
 }
@@ -18,7 +23,7 @@ NISTEvaluator::~NISTEvaluator() {}
 
 void NISTEvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
     int len_ref = reference.size();
-    for (int n = 0; n < 5; ++n) {
+    for (int n = 0; n < ngram_; ++n) {
         for (int k = 0; k + n < len_ref; ++k) {
             ++freq_[Utility::makeNGram(reference, k, n + 1)];
         }
@@ -38,7 +43,7 @@ void NISTEvaluator::calculate(const Sentence & reference, const Sentence & hypot
     // calculate averaged information weights
 
     map<Sentence, int> possible;
-    int max_n = len_hyp < 5 ? len_hyp : 5;
+    int max_n = len_hyp < ngram_ ? len_hyp : ngram_;
 
     for (int n = 0; n < max_n; ++n) {
         denominators_[n] += len_hyp - n;
@@ -69,7 +74,7 @@ double NISTEvaluator::getCumulative() const {
 
     // calculate n-gram score
     double np = 0.0;
-    for (int n = 0; n < 5; ++n) {
+    for (int n = 0; n < ngram_; ++n) {
         if (denominators_[n] > 0.0) {
             np += numerators_[n] / (denominators_[n] * log_2);
         }
@@ -88,10 +93,8 @@ double NISTEvaluator::getCumulative() const {
 }
 
 void NISTEvaluator::resetCumulative() {
-    for (int n = 0; n < 5; ++n) {
-        numerators_[n] = 0.0;
-        denominators_[n] = 0;
-    }
+    numerators_.assign(ngram_, 0.0);
+    denominators_.assign(ngram_, 0);
     total_len_ref_ = 0;
     total_len_hyp_ = 0;
 }
