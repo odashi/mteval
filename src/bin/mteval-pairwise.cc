@@ -25,7 +25,7 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
 
     OPT::options_description opt_generic("Generic options");
     opt_generic.add_options()
-        ("help,?", "show this help and exit")
+        ("help", "show this help and exit")
         ("verbose,v", "show intermediate results")
         ;
     OPT::options_description opt_input("Input files");
