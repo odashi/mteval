@@ -17,13 +17,8 @@ public:
     Dictionary() {}
     ~Dictionary() {}
 
-    WordID operator[](const std::string & word) {
-        auto it = ids_.find(word);
-        if (it != ids_.end()) return it->second;
-        WordID id = ids_.size();
-        ids_.insert(std::make_pair(word, id));
-        return id;
-    }
+    WordID operator[](const std::string & word);
+    Sentence getSentence(const std::string & line);
 
 private:
     std::map<std::string, WordID> ids_;

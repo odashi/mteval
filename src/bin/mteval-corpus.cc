@@ -3,17 +3,14 @@
 #include <mteval/Evaluator.h>
 #include <mteval/EvaluatorFactory.h>
 
-#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/program_options.hpp>
 
-#include <algorithm>
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <memory>
-#include <utility>
+//#include <utility>
 #include <vector>
 
 using namespace std;
@@ -70,16 +67,6 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     return move(args);
 }
 
-Sentence getSentence(const string & line, Dictionary & dict) {
-    vector<string> word_list;
-    string trimmed = boost::trim_copy(line);
-    if (trimmed.empty()) return Sentence();
-    boost::split(word_list, trimmed, boost::is_space(), boost::algorithm::token_compress_on);
-    Sentence sent(word_list.size());
-    transform(word_list.begin(), word_list.end(), sent.begin(), [&dict](const string & x) { return dict[x]; });
-    return sent;
-}
-
 void printScores(const vector<shared_ptr<Evaluator> > & evaluators) {
     if (evaluators.empty()) {
         cout << "no evaluation metrics." << endl;
@@ -117,8 +104,8 @@ int main(int argc, char * argv[]) {
 
         // prepare evaluator
         while (getline(*ifs_ref, line_ref) && getline(*ifs_hyp, line_hyp)) {
-            Sentence sent_ref = getSentence(line_ref, dict);
-            Sentence sent_hyp = getSentence(line_hyp, dict);
+            Sentence sent_ref = dict.getSentence(line_ref);
+            Sentence sent_hyp = dict.getSentence(line_hyp);
             for (auto & ev : evaluators) {
                 ev->prepare(sent_ref, sent_hyp);
             }
@@ -131,8 +118,8 @@ int main(int argc, char * argv[]) {
         
         // analyze
         while (getline(*ifs_ref, line_ref) && getline(*ifs_hyp, line_hyp)) {
-            Sentence sent_ref = getSentence(line_ref, dict);
-            Sentence sent_hyp = getSentence(line_hyp, dict);
+            Sentence sent_ref = dict.getSentence(line_ref);
+            Sentence sent_hyp = dict.getSentence(line_hyp);
             for (auto & ev : evaluators) {
                 ev->calculate(sent_ref, sent_hyp);
             }
