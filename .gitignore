@@ -24,4 +24,5 @@ stamp-h1
 
 src/bin/mteval-corpus
 src/bin/mteval-sentence
+src/bin/mteval-pairwise
 
