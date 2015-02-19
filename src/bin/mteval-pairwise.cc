@@ -36,8 +36,8 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     OPT::options_description opt_config("Configurations");
     opt_config.add_options()
         ("evaluator,e", OPT::value<vector<string> >()->multitoken(), "(required) evaluator descriptions")
-        ("num-iteration,i", OPT::value<int>(), "(required) number of virtual test sets to evaluate")
-        ("num-sample,s", OPT::value<int>(), "(required) number of sentences in a virtual test sets")
+        ("iteration,i", OPT::value<int>(), "(required) number of virtual test sets to evaluate")
+        ("sample,s", OPT::value<int>(), "(required) number of sentences in a virtual test sets")
         ;
     OPT::options_description opt;
     opt.add(opt_generic).add(opt_input).add(opt_config);
@@ -62,8 +62,8 @@ boost::program_options::variables_map parseOptions(int argc, char * argv []) {
     if (!args.count("reference") ||
         !args.count("hypothesis") ||
         !args.count("evaluator") ||
-        !args.count("num-iteration") ||
-        !args.count("num-sample")) {
+        !args.count("iteration") ||
+        !args.count("sample")) {
         cerr << "ERROR: insufficient required options" << endl;
         cerr << "(--help to show usage)" << endl;
         exit(1);
@@ -103,8 +103,8 @@ int main(int argc, char * argv[]) {
         bool verbose = args.count("verbose");
 
         vector<string> evaluator_desc = args["evaluator"].as<vector<string> >();
-        int num_iteration = args["num-iteration"].as<int>();
-        int num_sample = args["num-sample"].as<int>();
+        int num_iteration = args["iteration"].as<int>();
+        int num_sample = args["sample"].as<int>();
         string filename_ref = args["reference"].as<string>();
         vector<string> filename_hyp = args["hypothesis"].as<vector<string> >();
 
