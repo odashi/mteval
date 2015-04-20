@@ -1,5 +1,7 @@
 #include <mteval/WEREvaluator.h>
 
+#include <iostream>
+
 using namespace std;
 
 namespace MTEval {
@@ -37,7 +39,9 @@ void WEREvaluator::calculate(const Sentence & reference, const Sentence & hypoth
                 int sub = dp[i - 1][j - 1];
                 int ins = dp[i][j - 1];
                 int del = dp[i - 1][j];
-                dp[i][j] = 1 + (sub < ins ? sub : ins < del ? ins : del);
+                int cur = sub < ins ? sub : ins;
+                cur = cur < del ? cur : del;
+                dp[i][j] = 1 + cur;
             }
         }
     }
