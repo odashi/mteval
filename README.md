@@ -32,9 +32,15 @@ Usage
 -----
 
 MTEval now have 3 types of evaluation algorithm:
-* mteval-corpus - corpus-wise evaluation
-* mteval-sentence - sentence-wise evaluation
-* mteval-pairwise - pairwise bootstrap resampling
+* `mteval-corpus` - corpus-wise evaluation
+* `mteval-sentence` - sentence-wise evaluation
+* `mteval-pairwise` - pairwise bootstrap resampling
+
+`mteval-corpus` and `mteval-sentence` requires 1 reference and 1 hypothesis corpus
+to compute the goodness of the hypothesis.
+
+`mteval-pairwise` requires 1 reference and 2 hypothesis corpus
+to compute statistical significance of 1st hypothesis against 2nd hypothesis.
 
 For example, we use a small example set described below:
 
@@ -66,7 +72,9 @@ Then, we type below example commands and get results:
     $ mteval-pairwise -i 1000 -s 100 -e BLEU RIBES -r ref.tok -h hyp1.tok hyp2.tok 
     BLEU: p=0.004000 (996/1000)	RIBES: p=0.009000 (991/1000)
 
-Some evaluation metrics have parameters (e.g. smoothing, maximum n-gram for BLEU).
+(Note that results of `mteval-pairwise` changes randomly with a certain range)
+
+Some evaluation metrics have parameters (e.g. maximum n-gram, or smoothing for BLEU).
 You may set these parameters using `:param=value` notation:
 
     $ mteval-corpus -e BLEU:ngram=5:smooth=1 -r mydata/ref.tok -h mydata/hyp1.tok
@@ -83,27 +91,27 @@ You can type `mteval-*** --help` to see more specifications for each commands.
 List of Metrics
 ---------------
 
-### BLEU
-* Identifier: `BLEU`
-* Parameters:
-    * `ngram`: maximum n-gram length (default: `4`)
-    * `smooth`: additional counts for >1-gram (default: `0`)
+* **BLEU**
+    * Identifier: `BLEU`
+    * Parameters:
+        * `ngram`: maximum n-gram length (default: `4`)
+        * `smooth`: additional counts for >1-gram (default: `0`)
 
-### NIST
-* Identifier: `NIST`
-* Parameters:
-    * `ngram`: maximum n-gram length (default: `5`)
+* **NIST**
+    * Identifier: `NIST`
+    * Parameters:
+        * `ngram`: maximum n-gram length (default: `5`)
 
-### RIBES
-* Identifier: `RIBES`
-* Parameters:
-    * `alpha`: weight of unigram precision (default: `0.25`)
-    * `beta`: weight of brevity penalty (default: `0.1`)
+* **RIBES**
+    * Identifier: `RIBES`
+    * Parameters:
+        * `alpha`: weight of unigram precision (default: `0.25`)
+        * `beta`: weight of brevity penalty (default: `0.1`)
 
-### Word Error Rate
-* Identifier: `WER`
-* Parameters:
-    * None
+* **Word Error Rate**
+    * Identifier: `WER`
+    * Parameters:
+        * None
 
 
 Contributors
