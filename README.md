@@ -86,24 +86,24 @@ List of Metrics
 ### BLEU
 * Identifier: `BLEU`
 * Parameters:
-** `ngram`: maximum n-gram length (default: `4`)
-** `smooth`: additional counts for >1-gram (default: `0`)
+    * `ngram`: maximum n-gram length (default: `4`)
+    * `smooth`: additional counts for >1-gram (default: `0`)
 
 ### NIST
 * Identifier: `NIST`
 * Parameters:
-** `ngram`: maximum n-gram length (default: `5`)
+    * `ngram`: maximum n-gram length (default: `5`)
 
 ### RIBES
 * Identifier: `RIBES`
 * Parameters:
-** `alpha`: weight of unigram precision (default: `0.25`)
-** `beta`: weight of brevity penalty (default: `0.1`)
+    * `alpha`: weight of unigram precision (default: `0.25`)
+    * `beta`: weight of brevity penalty (default: `0.1`)
 
 ### Word Error Rate
 * Identifier: `WER`
 * Parameters:
-** None
+    * None
 
 
 Contributors
