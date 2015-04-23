@@ -15,7 +15,7 @@ Install
 -------
 
 You need following tools to build `mteval` implementations.
-* `GCC 4.7` or later ()
+* `GCC 4.7` or later
 * `Boost 1.49` or later
 * `autotools`
 
@@ -77,10 +77,10 @@ Then, we type below example commands and get results:
 Some evaluation metrics have parameters (e.g. maximum n-gram, or smoothing for BLEU).
 You may set these parameters using `:param=value` notation:
 
-    $ mteval-corpus -e BLEU:ngram=5:smooth=1 -r mydata/ref.tok -h mydata/hyp1.tok
+    $ mteval-corpus -e BLEU:ngram=5:smooth=1 -r ref.tok -h hyp1.tok
     BLEU=0.805196
 
-    $ mteval-corpus -e BLEU:smooth=1 -r mydata/ref.tok -h mydata/hyp1.tok
+    $ mteval-corpus -e BLEU:smooth=1 -r ref.tok -h hyp1.tok
     BLEU=0.819619
 
 Omitted parameters are assumed as default value.
