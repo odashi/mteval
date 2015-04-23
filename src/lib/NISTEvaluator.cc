@@ -68,9 +68,9 @@ double NISTEvaluator::getCumulative() const {
     
     // beta = -ln2 / (ln3 - ln2)^2
     // note: bp = 0.5 when |hyp|/E[|ref|] == 2/3
-    constexpr double log_2 = log(2.0);
-    constexpr double base = log(3.0) - log_2;
-    constexpr double beta = -log_2 / (base * base);
+    const double log_2 = log(2.0);
+    const double base = log(3.0) - log_2;
+    const double beta = -log_2 / (base * base);
 
     // calculate n-gram score
     double np = 0.0;
