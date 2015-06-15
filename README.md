@@ -10,6 +10,9 @@ About
 This software inplements some major machine translation evaluation metrics
 and evaluation algorithms to be easily used.
 
+If you used `MTEval` toolkit, please refer this software on your document with below link:
+* https://github.com/odashi/mteval
+
 
 Install
 -------
