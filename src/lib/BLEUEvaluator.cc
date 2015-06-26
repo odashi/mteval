@@ -58,7 +58,6 @@ double BLEUEvaluator::getCumulative() const {
     // calculate precision
     double np = 0.0;
     for (int n = 0; n < ngram_; ++n) {
-        if (numerators_[n] == 0) return 0.0;
         double nn = static_cast<double>(numerators_[n]);
         double dd = static_cast<double>(denominators_[n]);
         if (n > 0) {
@@ -66,6 +65,9 @@ double BLEUEvaluator::getCumulative() const {
             nn += smooth_;
             dd += smooth_;
         }
+
+        if (nn == 0.0) return 0.0;
+
         np += log(nn) - log(dd);
     }
 
