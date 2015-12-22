@@ -1,5 +1,4 @@
-#ifndef MTEVAL_EVALUATOR_H_
-#define MTEVAL_EVALUATOR_H_
+#pragma once
 
 #include <mteval/utils.h>
 
@@ -36,6 +35,4 @@ public:
 }; // class Evaluator
 
 } // namespace MTEVal
-
-#endif // MTEVAL_EVALUATOR_H_
 

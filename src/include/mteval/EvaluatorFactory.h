@@ -1,5 +1,4 @@
-#ifndef MTEVAL_EVALUATOR_FACTORY_H_
-#define MTEVAL_EVALUATOR_FACTORY_H_
+#pragma once
 
 #include <mteval/Evaluator.h>
 
@@ -22,4 +21,3 @@ public:
 
 } // namespace MTEval
 
-#endif // MTEVAL_EVALUATOR_FACTORY_H_

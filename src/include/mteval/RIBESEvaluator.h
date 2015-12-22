@@ -1,5 +1,4 @@
-#ifndef MTEVAL_RIBES_EVALUATOR_H_
-#define MTEVAL_RIBES_EVALUATOR_H_
+#pragma once
 
 #include <mteval/Evaluator.h>
 
@@ -35,6 +34,4 @@ private:
 }; // class RIBESEvaluator
 
 } // namespace MTEval
-
-#endif // MTEVAL_RIBES_EVALUATOR_H_
 

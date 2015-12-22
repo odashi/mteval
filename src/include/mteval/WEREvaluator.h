@@ -1,5 +1,4 @@
-#ifndef MTEVAL_WER_EVALUATOR_H_
-#define MTEVAL_WER_EVALUATOR_H_
+#pragma once
 
 #include <mteval/Evaluator.h>
 
@@ -31,6 +30,4 @@ private:
 }; // class WEREvaluator
 
 } // namespace MTEval
-
-#endif // MTEVAL_WER_EVALUATOR_H_
 

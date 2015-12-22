@@ -1,5 +1,4 @@
-#ifndef MTEVAL_NIST_EVALUATOR_H_
-#define MTEVAL_NIST_EVALUATOR_H_
+#pragma once
 
 #include <mteval/Evaluator.h>
 
@@ -41,6 +40,4 @@ private:
 }; // class NISTEvaluator
 
 } // namespace MTEval
-
-#endif // MTEVAL_NIST_EVALUATOR_H_
 

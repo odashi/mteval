@@ -1,5 +1,4 @@
-#ifndef MTEVAL_UTILS_H_
-#define MTEVAL_UTILS_H_
+#pragma once
 
 #include <fstream>
 #include <memory>
@@ -31,4 +30,3 @@ public:
 
 } // namespace MTEval
 
-#endif // MTEVAL_UTILS_H_

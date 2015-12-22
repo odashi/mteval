@@ -1,5 +1,4 @@
-#ifndef MTEVAL_DICTIONARY_H_
-#define MTEVAL_DICTIONARY_H_
+#pragma once
 
 #include <mteval/utils.h>
 
@@ -26,6 +25,4 @@ private:
 }; // class Dictionary
 
 } // namespace MTEval
-
-#endif // MTEval_DICTIONARY_H_
 
