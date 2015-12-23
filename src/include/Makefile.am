@@ -5,5 +5,6 @@ nobase_include_HEADERS = \
 	mteval/EvaluatorFactory.h \
 	mteval/NISTEvaluator.h \
 	mteval/RIBESEvaluator.h \
+	mteval/Statistics.h \
 	mteval/WEREvaluator.h \
 	mteval/utils.h

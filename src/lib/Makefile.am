@@ -9,5 +9,6 @@ libmteval_la_SOURCES = \
 	EvaluatorFactory.cc \
 	NISTEvaluator.cc \
 	RIBESEvaluator.cc \
+	Statistics.cc \
 	WEREvaluator.cc
 
