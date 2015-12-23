@@ -1,5 +1,5 @@
 AM_CXXFLAGS = -I$(srcdir)/../include $(BOOST_CPPFLAGS)
-LDADD = ../lib/libmteval.la $(BOOST_PROGRAM_OPTIONS_LIB)
+LDADD = -lstdc++ ../lib/libmteval.la $(BOOST_PROGRAM_OPTIONS_LIB)
 
 bin_PROGRAMS = mteval-corpus mteval-sentence mteval-pairwise
 

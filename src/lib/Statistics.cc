@@ -64,5 +64,13 @@ void Statistics::addReal(const string& key, const double value) {
   real_map_[key] += value;
 }
 
+unsigned int Statistics::numIntEntries() const {
+  return int_map_.size();
+}
+
+unsigned int Statistics::numRealEntries() const {
+  return real_map_.size();
+}
+
 } // namespace MTEval
 
