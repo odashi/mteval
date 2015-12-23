@@ -1,6 +1,8 @@
 *~
 *.la
 *.lo
+*.log
+*.trs
 *.o
 .deps
 .libs
@@ -21,8 +23,10 @@ ltmain.sh
 missing
 mydata
 stamp-h1
+test-driver
 
 src/bin/mteval-corpus
 src/bin/mteval-sentence
 src/bin/mteval-pairwise
+src/test/*_test
 
