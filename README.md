@@ -88,7 +88,24 @@ You may set these parameters using `:param=value` notation:
 
 Omitted parameters are assumed as default value.
 
-You can type `mteval-*** --help` to see more specifications for each commands.
+If you need to obtain inner statistics of each evaluation metrics,
+you can use `--output-stats` option for `mteval-corpus` and `mteval-sentence`:
+
+    $ mteval-corpus --output-stats -e BLEU -r ref.tok -h hyp1.tok | sed 's/\t/\n/g'
+    BLEU=0.796902
+    BLEU:len:hyp=15
+    BLEU:len:ref=15
+    BLEU:ngram:1:hyp=15
+    BLEU:ngram:1:match=14
+    BLEU:ngram:2:hyp=12
+    BLEU:ngram:2:match=10
+    BLEU:ngram:3:hyp=9
+    BLEU:ngram:3:match=7
+    BLEU:ngram:4:hyp=6
+    BLEU:ngram:4:match=4
+    BLEU:samples=3
+
+Type `mteval-*** --help` to see more information for each command.
 
 
 List of Metrics
@@ -99,22 +116,44 @@ List of Metrics
     * Parameters:
         * `ngram`: maximum n-gram length (default: `4`)
         * `smooth`: additional counts for >1-gram (default: `0`)
+    * Statistics:
+        * `len:hyp`: number of words in hypothesis sentences.
+        * `len:ref`: number of words in reference sentences.
+        * `ngram:%d:hyp`: number of n-grams in the hypothesis sentence.
+        * `ngram:%d:match`: number of matched n-grams.
+        * `samples`: number of evaluation samples.
 
 * **NIST**
     * Identifier: `NIST`
     * Parameters:
         * `ngram`: maximum n-gram length (default: `5`)
+    * Statistics:
+        * `len:hyp`: number of words in hypothesis sentences.
+        * `len:ref`: number of words in reference sentences.
+        * `ngram:%d:hyp`: number of n-grams in the hypothesis sentence.
+        * `ngram:%d:match`: cumulative weighted n-gram matches.
+        * `samples`: number of evaluation samples.
 
 * **RIBES**
     * Identifier: `RIBES`
     * Parameters:
         * `alpha`: weight of unigram precision (default: `0.25`)
         * `beta`: weight of brevity penalty (default: `0.1`)
+    * Statistics:
+        * `brevity`: cumulative brevity penalty for each evaluation sample.
+        * `nkt`: cumulative Kendall's tau for each evaluation sample.
+        * `prec`: cumulative unigram precision for each evaluation sample.
+        * `samples`: number of evaluation samples.
+        * `score`: cumulative RIBES score for each evaluation sample.
 
 * **Word Error Rate**
     * Identifier: `WER`
     * Parameters:
         * None
+    * Statistics:
+        * `distance`: cumulative Levenshtein distance for each evaluation sample.
+        * `samples`: number of evaluation samples.
+        * `score`: cumulative WER score for each evaluation sample.
 
 
 Contributors

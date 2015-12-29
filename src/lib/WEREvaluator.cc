@@ -45,6 +45,7 @@ Statistics WEREvaluator::map(const Sample& sample) const {
 
   Statistics stats;
   stats.addInt("samples", 1);
+  stats.addInt("distance", dp[len_ref][len_hyp]);
   stats.addReal("score", static_cast<double>(dp[len_ref][len_hyp]) / len_ref);
   return std::move(stats);
 }

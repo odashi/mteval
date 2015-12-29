@@ -23,6 +23,9 @@ public:
   void prepare(const Sample& sample);
 
   // Statistics to be obtained:
+  //   "distance"
+  //     <int>
+  //     Cumulative Levenshtein distance for each evaluation sample.
   //   "samples"
   //     <int>
   //     Number of evaluation samples.

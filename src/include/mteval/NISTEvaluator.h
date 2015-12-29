@@ -35,7 +35,7 @@ public:
   //     Number of n-grams in the hypothesis sentence.
   //   "ngram:%d:match"
   //     <real>
-  //     Cumulative weited n-gram matches between the hypothesis and the
+  //     Cumulative weighted n-gram matches between the hypothesis and the
   //     reference.
   //   "samples"
   //     <int>
