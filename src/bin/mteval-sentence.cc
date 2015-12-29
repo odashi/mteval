@@ -131,7 +131,7 @@ int main(int argc, char * argv[]) {
                 name % kv.first % kv.second);
           }
           for (const auto& kv : stats[i].realEntries()) {
-            cout << '\t' << (boost::format("%s:%s=%d") %
+            cout << '\t' << (boost::format("%s:%s=%.6f") %
                 name % kv.first % kv.second);
           }
         }

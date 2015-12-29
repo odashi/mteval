@@ -2,7 +2,7 @@
 
 #include <mteval/BLEUEvaluator.h>
 //#include <mteval/NISTEvaluator.h>
-//#include <mteval/RIBESEvaluator.h>
+#include <mteval/RIBESEvaluator.h>
 //#include <mteval/WEREvaluator.h>
 
 #include <boost/algorithm/string.hpp>
@@ -36,8 +36,8 @@ shared_ptr<Evaluator> EvaluatorFactory::create(const string & spec) {
     return shared_ptr<Evaluator>(new BLEUEvaluator(params));
   //if (name == "NIST")
   //  return shared_ptr<Evaluator>(new NISTEvaluator(params));
-  //if (name == "RIBES")
-  //  return shared_ptr<Evaluator>(new RIBESEvaluator(params));
+  if (name == "RIBES")
+    return shared_ptr<Evaluator>(new RIBESEvaluator(params));
   //if (name == "WER")
   //  return shared_ptr<Evaluator>(new WEREvaluator(params));
   throw runtime_error("invalid evaluator specification \"" + spec + "\"");

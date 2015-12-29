@@ -2,36 +2,55 @@
 
 #include <mteval/Evaluator.h>
 
+#include <vector>
+
 namespace MTEval {
 
+// Calculates RIBES score
 class RIBESEvaluator : public Evaluator {
-
-    RIBESEvaluator(const RIBESEvaluator &) = delete;
-    RIBESEvaluator & operator=(const RIBESEvaluator &) = delete;
+  RIBESEvaluator(const RIBESEvaluator&) = delete;
+  RIBESEvaluator(RIBESEvaluator&&) = delete;
+  RIBESEvaluator& operator=(const RIBESEvaluator&) = delete;
+  RIBESEvaluator& operator=(RIBESEvaluator&&) = delete;
 
 public:
-    RIBESEvaluator(const std::vector<EvaluatorParam> & params);
-    ~RIBESEvaluator();
+  // Acceptable EvaluatorParams:
+  //   "alpha"
+  //     Weight of unigram precision.
+  //   "beta"
+  //     Weight of brevity penalty.
+  RIBESEvaluator(const std::vector<EvaluatorParam> & params);
 
-    void prepare(const Sentence & reference, const Sentence & hypothesis);
+  ~RIBESEvaluator();
+  
+  void prepare(const Sample& sample);
 
-    void calculate(const Sentence & reference, const Sentence & hypothesis);
-
-    double getCumulative() const;
-
-    void resetCumulative();
-    
-    std::string getName() const;
+  // Statistics to be obtained:
+  //   "brevity"
+  //     <real>
+  //     Cumulative brevity penalty for each evaluation sample.
+  //   "nkt"
+  //     <real>
+  //     Cumulative Kendall's tau for each evaluation sample.
+  //   "prec"
+  //     <real>
+  //     Cumulative unigram precision for each evaluation sample.
+  //   "samples"
+  //     <int>
+  //     Number of evaluation samples.
+  //   "score"
+  //     <real>
+  //     Cumulative RIBES score for each evaluation sample.
+  Statistics map(const Sample& sample) const;
+  
+  double integrate(const Statistics& stats) const;
+  std::string getName() const;
 
 private:
-    unsigned int num_sents_;
-    double total_;
-
-    // hyperparameters
-    double alpha_;
-    double beta_;
-
-}; // class RIBESEvaluator
+  // hyperparameters
+  double alpha_;
+  double beta_;
+};
 
 } // namespace MTEval
 

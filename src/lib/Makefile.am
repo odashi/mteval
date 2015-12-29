@@ -7,5 +7,6 @@ libmteval_la_SOURCES = \
 	BLEUEvaluator.cc \
 	Dictionary.cc \
 	EvaluatorFactory.cc \
+	RIBESEvaluator.cc \
 	Statistics.cc
 
