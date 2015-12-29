@@ -30,6 +30,7 @@ CXXFLAGS="$CXXFLAGS -O2"
 # Checks for library functions.
 
 AC_CONFIG_FILES([Makefile
+                 data/Makefile
                  src/Makefile
                  src/bin/Makefile
                  src/include/Makefile

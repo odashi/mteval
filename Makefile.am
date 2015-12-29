@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = src
+SUBDIRS = src data
 
 EXTRA_DIST = \
 	README.md \
