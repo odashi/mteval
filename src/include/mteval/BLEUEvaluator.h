@@ -50,7 +50,6 @@ private:
   // hyperparameters
   int ngram_;
   double smooth_;
-
 };
 
 } // namespace MTEval

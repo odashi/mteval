@@ -23,8 +23,7 @@ RIBESEvaluator::RIBESEvaluator(const vector<EvaluatorParam> & params)
 
 RIBESEvaluator::~RIBESEvaluator() {}
 
-void RIBESEvaluator::prepare(const Sample& sample) {
-}
+void RIBESEvaluator::prepare(const Sample& sample) {}
 
 Statistics RIBESEvaluator::map(const Sample& sample) const {
   int len_hyp = sample.hypothesis.size();
@@ -131,7 +130,7 @@ Statistics RIBESEvaluator::map(const Sample& sample) const {
 double RIBESEvaluator::integrate(const Statistics& stats) const {
   int samples = stats.getInt("samples");
   if (samples == 0) return 0.0;
-  else return stats.getReal("score") / static_cast<double>(samples);
+  else return stats.getReal("score") / samples;
 }
 
 string RIBESEvaluator::getName() const {

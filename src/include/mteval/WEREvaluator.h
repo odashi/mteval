@@ -2,32 +2,38 @@
 
 #include <mteval/Evaluator.h>
 
+#include <vector>
+
 namespace MTEval {
 
+// Calculates WER and WER+n scores
 class WEREvaluator : public Evaluator {
-
-    WEREvaluator(const WEREvaluator &) = delete;
-    WEREvaluator & operator=(const WEREvaluator &) = delete;
+  WEREvaluator(const WEREvaluator&) = delete;
+  WEREvaluator(WEREvaluator&&) = delete;
+  WEREvaluator& operator=(const WEREvaluator&) = delete;
+  WEREvaluator& operator=(WEREvaluator&&) = delete;
 
 public:
-    WEREvaluator(const std::vector<EvaluatorParam> & params);
-    ~WEREvaluator();
+  // Acceptable EvaluatorParams:
+  //   none
+  WEREvaluator(const std::vector<EvaluatorParam> & params);
 
-    void prepare(const Sentence & reference, const Sentence & hypothesis);
+  ~WEREvaluator();
+  
+  void prepare(const Sample& sample);
 
-    void calculate(const Sentence & reference, const Sentence & hypothesis);
-
-    double getCumulative() const;
-
-    void resetCumulative();
-    
-    std::string getName() const;
-
-private:
-    unsigned int num_sents_;
-    double total_;
-
-}; // class WEREvaluator
+  // Statistics to be obtained:
+  //   "samples"
+  //     <int>
+  //     Number of evaluation samples.
+  //   "score"
+  //     <real>
+  //     Cumulative WER score for each evaluation sample.
+  Statistics map(const Sample& sample) const;
+  
+  double integrate(const Statistics& stats) const;
+  std::string getName() const;
+};
 
 } // namespace MTEval
 

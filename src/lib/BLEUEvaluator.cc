@@ -36,23 +36,23 @@ Statistics BLEUEvaluator::map(const Sample& sample) const {
   int max_n = len_hyp < ngram_ ? len_hyp : ngram_;
 
   // gather statistics
-  for (int n = 0; n < max_n; ++n) {
+  for (int n = 1; n <= max_n; ++n) {
     int matched = 0;
 
-    for (int k = 0; k + n < len_ref; ++k) {
-      ++possible[Utility::makeNGram(sample.references[0], k, n + 1)];
+    for (int k = 0; k + n <= len_ref; ++k) {
+      ++possible[Utility::makeNGram(sample.references[0], k, n)];
     }
 
-    for (int k = 0; k + n < len_hyp; ++k) {
-      auto it = possible.find(Utility::makeNGram(sample.hypothesis, k, n + 1));
+    for (int k = 0; k + n <= len_hyp; ++k) {
+      auto it = possible.find(Utility::makeNGram(sample.hypothesis, k, n));
       if (it != possible.end() && it->second > 0) {
         --it->second;
         ++matched;
       }
     }
     
-    stats.addInt("ngram:" + std::to_string(n + 1) + ":hyp", len_hyp - n);
-    stats.addInt("ngram:" + std::to_string(n + 1) + ":match", matched);
+    stats.addInt("ngram:" + std::to_string(n) + ":hyp", len_hyp - n + 1);
+    stats.addInt("ngram:" + std::to_string(n) + ":match", matched);
   }
 
   return std::move(stats);

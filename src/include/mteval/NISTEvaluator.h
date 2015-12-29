@@ -2,42 +2,56 @@
 
 #include <mteval/Evaluator.h>
 
-#include <map>
 #include <vector>
 
 namespace MTEval {
 
+// Calculates NIST and scores
 class NISTEvaluator : public Evaluator {
-
-    NISTEvaluator(const NISTEvaluator &) = delete;
-    NISTEvaluator & operator=(const NISTEvaluator &) = delete;
+  NISTEvaluator(const NISTEvaluator&) = delete;
+  NISTEvaluator(NISTEvaluator&&) = delete;
+  NISTEvaluator& operator=(const NISTEvaluator&) = delete;
+  NISTEvaluator& operator=(NISTEvaluator&&) = delete;
 
 public:
-    NISTEvaluator(const std::vector<EvaluatorParam> & params);
-    ~NISTEvaluator();
+  // Acceptable EvaluatorParams:
+  //   "ngram"
+  //     Maximum num of n-gram to be used.
+  NISTEvaluator(const std::vector<EvaluatorParam> & params);
 
-    void prepare(const Sentence & reference, const Sentence & hypothesis);
+  ~NISTEvaluator();
+  
+  void prepare(const Sample& sample);
 
-    void calculate(const Sentence & reference, const Sentence & hypothesis);
-
-    double getCumulative() const;
-
-    void resetCumulative();
-    
-    std::string getName() const;
+  // Statistics to be obtained:
+  //   "len:hyp"
+  //     <int>
+  //     Number of words in hypothesis sentences.
+  //   "len:ref"
+  //     <int>
+  //     Number of words in reference sentences.
+  //   "ngram:%d:hyp"
+  //     <int>
+  //     Number of n-grams in the hypothesis sentence.
+  //   "ngram:%d:match"
+  //     <real>
+  //     Cumulative weited n-gram matches between the hypothesis and the
+  //     reference.
+  //   "samples"
+  //     <int>
+  //     Number of evaluation samples.
+  Statistics map(const Sample& sample) const;
+  
+  double integrate(const Statistics& stats) const;
+  std::string getName() const;
 
 private:
-    std::map<Sentence, int> freq_;
+  // inner statistics
+  std::map<Sentence, int> freq_;
 
-    std::vector<double> numerators_;
-    std::vector<int> denominators_;
-    int total_len_ref_;
-    int total_len_hyp_;
-
-    // hyperparameters
-    int ngram_;
-
-}; // class NISTEvaluator
+  // hyperparameters
+  int ngram_;
+};
 
 } // namespace MTEval
 

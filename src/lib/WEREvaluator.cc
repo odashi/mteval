@@ -1,66 +1,62 @@
 #include <mteval/WEREvaluator.h>
 
 #include <iostream>
+#include <utility>
 
 using namespace std;
 
 namespace MTEval {
 
 WEREvaluator::WEREvaluator(const vector<EvaluatorParam> & params)
-    : Evaluator(params) {
-
-    resetCumulative();
-}
+  : Evaluator(params) {}
 
 WEREvaluator::~WEREvaluator() {}
 
-void WEREvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
-}
+void WEREvaluator::prepare(const Sample& sample) {}
 
-void WEREvaluator::calculate(const Sentence & reference, const Sentence & hypothesis) {
-    ++num_sents_;
+Statistics WEREvaluator::map(const Sample& sample) const {
+  int len_hyp = sample.hypothesis.size();
+  int len_ref = sample.references[0].size();
+  if (len_ref == 0 || len_hyp == 0) return Statistics();
 
-    int len_ref = reference.size();
-    int len_hyp = hypothesis.size();
-    if (len_ref == 0 || len_hyp == 0) return;
+  // initialize
 
-    // initialize
+  int dp[len_ref + 1][len_hyp + 1];
+  for (int i = 0; i <= len_ref; ++i) dp[i][0] = i;
+  for (int j = 1; j <= len_hyp; ++j) dp[0][j] = j;
 
-    int dp[len_ref + 1][len_hyp + 1];
-    for (int i = 0; i <= len_ref; ++i) dp[i][0] = i;
-    for (int j = 1; j <= len_hyp; ++j) dp[0][j] = j;
+  // calculate Levenshtein distance
 
-    // calculate Levenshtein distance
-
-    for (int i = 1; i <= len_ref; ++i) {
-        for (int j = 1; j <= len_hyp; ++j) {
-            if (reference[i - 1] == hypothesis[j - 1]) dp[i][j] = dp[i - 1][j - 1];
-            else {
-                int sub = dp[i - 1][j - 1];
-                int ins = dp[i][j - 1];
-                int del = dp[i - 1][j];
-                int cur = sub < ins ? sub : ins;
-                cur = cur < del ? cur : del;
-                dp[i][j] = 1 + cur;
-            }
-        }
+  for (int i = 1; i <= len_ref; ++i) {
+    for (int j = 1; j <= len_hyp; ++j) {
+      if (sample.references[0][i - 1] == sample.hypothesis[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      }
+      else {
+        int sub = dp[i - 1][j - 1];
+        int ins = dp[i][j - 1];
+        int del = dp[i - 1][j];
+        int cur = sub < ins ? sub : ins;
+        cur = cur < del ? cur : del;
+        dp[i][j] = 1 + cur;
+      }
     }
+  }
 
-    total_ += static_cast<double>(dp[len_ref][len_hyp]) / len_ref;
+  Statistics stats;
+  stats.addInt("samples", 1);
+  stats.addReal("score", static_cast<double>(dp[len_ref][len_hyp]) / len_ref);
+  return std::move(stats);
 }
 
-double WEREvaluator::getCumulative() const {
-    if (num_sents_) return total_ / static_cast<double>(num_sents_);
-    else return 0.0;
-}
-
-void WEREvaluator::resetCumulative() {
-    num_sents_ = 0;
-    total_ = 0.0;
+double WEREvaluator::integrate(const Statistics& stats) const {
+  int samples = stats.getInt("samples");
+  if (samples == 0) return 0.0;
+  else return stats.getReal("score") / samples;
 }
 
 string WEREvaluator::getName() const {
-    return "WER";
+  return "WER";
 }
 
 } // namespace MTEval
