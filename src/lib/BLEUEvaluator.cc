@@ -4,90 +4,94 @@
 
 #include <cmath>
 #include <map>
-
-using namespace std;
+#include <utility>
 
 namespace MTEval {
 
-BLEUEvaluator::BLEUEvaluator(const vector<EvaluatorParam> & params)
-    : Evaluator(params)
-    , ngram_(4)
-    , smooth_(0.0) {
+BLEUEvaluator::BLEUEvaluator(const std::vector<EvaluatorParam>& params)
+  : Evaluator(params)
+  , ngram_(4)
+  , smooth_(0.0) {
 
-    for (auto & p : params) {
-        if (p.name == "ngram") ngram_ = p.int_val;
-        if (p.name == "smooth") smooth_ = p.real_val;
-    }
-    
-    resetCumulative();
+  for (auto& p : params) {
+    if (p.name == "ngram") ngram_ = p.int_val;
+    if (p.name == "smooth") smooth_ = p.real_val;
+  }
 }
 
 BLEUEvaluator::~BLEUEvaluator() {}
 
-void BLEUEvaluator::prepare(const Sentence & reference, const Sentence & hypothesis) {
-}
+void BLEUEvaluator::prepare(const Sample& sample) {}
 
-void BLEUEvaluator::calculate(const Sentence & reference, const Sentence & hypothesis) {
-    int len_ref = reference.size();
-    int len_hyp = hypothesis.size();
-    total_ref_ += len_ref;
-    total_hyp_ += len_hyp;
+Statistics BLEUEvaluator::map(const Sample& sample) const {
+  Statistics stats;
+  stats.addInt("samples", 1);
 
-    map<Sentence, int> possible;
-    int max_n = len_hyp < ngram_ ? len_hyp : ngram_;
+  int len_hyp = sample.hypothesis.size();
+  int len_ref = sample.references[0].size();
+  stats.addInt("len:hyp", len_hyp);
+  stats.addInt("len:ref", len_ref);
 
-    // gather statistics
-    for (int n = 0; n < max_n; ++n) {
-        denominators_[n] += len_hyp - n;
+  std::map<Sentence, int> possible;
+  int max_n = len_hyp < ngram_ ? len_hyp : ngram_;
 
-        for (int k = 0; k + n < len_ref; ++k) {
-            ++possible[Utility::makeNGram(reference, k, n + 1)];
-        }
+  // gather statistics
+  for (int n = 0; n < max_n; ++n) {
+    int matched = 0;
 
-        for (int k = 0; k + n < len_hyp; ++k) {
-            auto it = possible.find(Utility::makeNGram(hypothesis, k, n + 1));
-            if (it != possible.end() && it->second > 0) {
-                --it->second;
-                ++numerators_[n];
-            }
-        }
-    }
-}
-
-double BLEUEvaluator::getCumulative() const {
-    // calculate precision
-    double np = 0.0;
-    for (int n = 0; n < ngram_; ++n) {
-        double nn = static_cast<double>(numerators_[n]);
-        double dd = static_cast<double>(denominators_[n]);
-        if (n > 0) {
-            // smoothing
-            nn += smooth_;
-            dd += smooth_;
-        }
-
-        if (nn == 0.0) return 0.0;
-
-        np += log(nn) - log(dd);
+    for (int k = 0; k + n < len_ref; ++k) {
+      ++possible[Utility::makeNGram(sample.references[0], k, n + 1)];
     }
 
-    // calculate brevity penalty
-    double bp = 1.0 - static_cast<double>(total_ref_) / total_hyp_;
-    if (bp > 0.0) bp = 0.0;
+    for (int k = 0; k + n < len_hyp; ++k) {
+      auto it = possible.find(Utility::makeNGram(sample.hypothesis, k, n + 1));
+      if (it != possible.end() && it->second > 0) {
+        --it->second;
+        ++matched;
+      }
+    }
+    
+    stats.addInt("ngram:" + std::to_string(n + 1) + ":hyp", len_hyp - n);
+    stats.addInt("ngram:" + std::to_string(n + 1) + ":match", matched);
+  }
 
-    // calculate final score
-    return exp(np / static_cast<double>(ngram_) + bp);
+  return std::move(stats);
 }
 
-void BLEUEvaluator::resetCumulative() {
-    numerators_.assign(ngram_, 0);
-    denominators_.assign(ngram_, 0);
-    total_ref_ = 0;
-    total_hyp_ = 0;
+double BLEUEvaluator::integrate(const Statistics& stats) const {
+  // calculate precision
+  double np = 0.0;
+  for (int n = 1; n <= ngram_; ++n) {
+    double dd = static_cast<double>(
+        stats.getInt("ngram:" + std::to_string(n) + ":hyp"));
+    double nn = static_cast<double>(
+        stats.getInt("ngram:" + std::to_string(n) + ":match"));
+    
+    // smoothing
+    if (n > 1) {
+      nn += smooth_;
+      dd += smooth_;
+    }
+
+    // if at least 1 numerator is 0, the score becomes 0.
+    if (nn == 0.0) return 0.0;
+    
+    np += log(nn) - log(dd);
+  }
+
+  // calculate brevity penalty
+  double bp =
+    1.0 -
+    static_cast<double>(stats.getInt("len:ref")) /
+    static_cast<double>(stats.getInt("len:hyp"));
+  if (bp > 0.0) bp = 0.0;
+
+  // calculate final score
+  return exp(np / static_cast<double>(ngram_) + bp);
 }
 
-string BLEUEvaluator::getName() const {
-    return "BLEU";
+std::string BLEUEvaluator::getName() const {
+  return "BLEU";
 }
 
 } // namespace MTEval

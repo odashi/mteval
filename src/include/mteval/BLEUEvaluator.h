@@ -6,36 +6,52 @@
 
 namespace MTEval {
 
+// Calculates BLEU and BLEU+n scores
 class BLEUEvaluator : public Evaluator {
-
-    BLEUEvaluator(const BLEUEvaluator &) = delete;
-    BLEUEvaluator & operator=(const BLEUEvaluator &) = delete;
+  BLEUEvaluator(const BLEUEvaluator&) = delete;
+  BLEUEvaluator(BLEUEvaluator&&) = delete;
+  BLEUEvaluator& operator=(const BLEUEvaluator&) = delete;
+  BLEUEvaluator& operator=(BLEUEvaluator&&) = delete;
 
 public:
-    BLEUEvaluator(const std::vector<EvaluatorParam> & params);
-    ~BLEUEvaluator();
+  // Acceptable EvaluatorParams:
+  //   "ngram"
+  //     Maximum num of n-gram to be used.
+  //   "smooth"
+  //     Additional count for >1-grams.
+  BLEUEvaluator(const std::vector<EvaluatorParam> & params);
 
-    void prepare(const Sentence & reference, const Sentence & hypothesis);
+  ~BLEUEvaluator();
+  
+  void prepare(const Sample& sample);
 
-    void calculate(const Sentence & reference, const Sentence & hypothesis);
-
-    double getCumulative() const;
-
-    void resetCumulative();
-    
-    std::string getName() const;
+  // Statistics to be obtained:
+  //   "len:hyp"
+  //     <int>
+  //     Number of words in hypothesis sentences.
+  //   "len:ref"
+  //     <int>
+  //     Number of words in reference sentences.
+  //   "ngram:%d:hyp"
+  //     <int>
+  //     Number of n-grams in the hypothesis sentence.
+  //   "ngram:%d:match"
+  //     <int>
+  //     Number of matched n-grams between the hypothesis and the reference.
+  //   "samples"
+  //     <int>
+  //     Number of evaluation samples.
+  Statistics map(const Sample& sample) const;
+  
+  double integrate(const Statistics& stats) const;
+  std::string getName() const;
 
 private:
-    std::vector<int> numerators_;
-    std::vector<int> denominators_;
-    int total_ref_;
-    int total_hyp_;
+  // hyperparameters
+  int ngram_;
+  double smooth_;
 
-    // hyperparameters
-    int ngram_;
-    double smooth_;
-
-}; // class BLEUEvaluator
+};
 
 } // namespace MTEval
 
