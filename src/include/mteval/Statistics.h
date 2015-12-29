@@ -26,8 +26,8 @@ public:
   void addInt(const std::string& key, const int value);
   void addReal(const std::string& key, const double value);
 
-  unsigned int numIntEntries() const;
-  unsigned int numRealEntries() const;
+  const std::map<std::string, int>& intEntries() const { return int_map_; }
+  const std::map<std::string, double>& realEntries() const { return real_map_; }
 
 private:
   std::map<std::string, int> int_map_;
