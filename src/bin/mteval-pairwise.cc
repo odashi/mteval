@@ -174,14 +174,14 @@ int main(int argc, char * argv[]) {
       // Print results
       if (verbose) {
         cout << "Iteration " << (iteration + 1) << ":" << endl;
-        for (size_t ev = 0; ev < num_evaluators; ++ev) {
+        for (int ev = 0; ev < num_evaluators; ++ev) {
           if (ev > 0) cout << '\t';
           cout << (boost::format("%s=%.6f") %
               evaluators1[ev]->getName() %
               scores1[ev]);
         }
         cout << endl;
-        for (size_t ev = 0; ev < num_evaluators; ++ev) {
+        for (int ev = 0; ev < num_evaluators; ++ev) {
           if (ev > 0) cout << '\t';
           cout << (boost::format("%s=%.6f") %
               evaluators2[ev]->getName() %
