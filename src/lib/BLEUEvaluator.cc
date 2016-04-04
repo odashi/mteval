@@ -74,6 +74,7 @@ double BLEUEvaluator::integrate(const Statistics& stats) const {
     }
 
     // if at least 1 numerator is 0, the score becomes 0.
+    // when 'smooth' is set as nonzero, this line evaluates whether only 1-gram precision is 0 or not.
     if (nn == 0.0) return 0.0;
     
     np += log(nn) - log(dd);
