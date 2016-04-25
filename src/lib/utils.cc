@@ -44,6 +44,40 @@ int Utility::findSubsentence(const Sentence & pattern, const Sentence & sent) {
     return -1;
 }
 
+double Utility::calculateLevenshteinDistance(
+  const Sentence & ref, const Sentence & hyp,
+  const double sub_weight, const double ins_weight, const double del_weight
+) {
+  int len_ref = ref.size();
+  int len_hyp = hyp.size();
+
+  // initialize DP table
+  double dp[len_ref + 1][len_hyp + 1];
+  for (int i = 0; i <= len_ref; ++i) {
+    dp[i][0] = del_weight * static_cast<double>(i);
+  }
+  for (int j = 1; j <= len_hyp; ++j) {
+    dp[0][j] = ins_weight * static_cast<double>(j);
+  }
+
+  // fill DP table
+  for (int i = 1; i <= len_ref; ++i) {
+    for (int j = 1; j <= len_hyp; ++j) {
+      if (ref[i - 1] == hyp[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        double sub = sub_weight + dp[i - 1][j - 1];
+        double ins = ins_weight + dp[i][j - 1];
+        double del = del_weight + dp[i - 1][j];
+        double tmp = sub < ins ? sub : ins;
+        dp[i][j] = tmp < del ? tmp : del;
+      }
+    }
+  }
+
+  return dp[len_ref][len_hyp];
+}
+
 unique_ptr<ifstream> Utility::openInputStream(const string & filename) {
     unique_ptr<ifstream> ifs(new ifstream(filename));
     if (!ifs->is_open()) {
