@@ -15,7 +15,12 @@ class WEREvaluator : public Evaluator {
 
 public:
   // Acceptable EvaluatorParams:
-  //   none
+  //   "substitute"
+  //     weight of substituting ref/hyp words
+  //   "insert"
+  //     weight of inserting a hyp word
+  //   "delete"
+  //     weight of deletion a hyp word
   WEREvaluator(const std::vector<EvaluatorParam> & params);
 
   ~WEREvaluator();
@@ -36,6 +41,12 @@ public:
   
   double integrate(const Statistics& stats) const;
   std::string getName() const;
+
+private:
+  // hyperparamaters
+  double w_sub_;
+  double w_ins_;
+  double w_del_;
 };
 
 } // namespace MTEval

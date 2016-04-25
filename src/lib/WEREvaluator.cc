@@ -8,7 +8,17 @@ using namespace std;
 namespace MTEval {
 
 WEREvaluator::WEREvaluator(const vector<EvaluatorParam> & params)
-  : Evaluator(params) {}
+  : Evaluator(params)
+  , w_sub_(1.0)
+  , w_ins_(1.0)
+  , w_del_(1.0) {
+
+  for (auto& p : params) {
+    if (p.name == "substitute") w_sub_ = p.real_val;
+    if (p.name == "insert") w_ins_ = p.real_val;
+    if (p.name == "delete") w_del_ = p.real_val;
+  }
+}
 
 WEREvaluator::~WEREvaluator() {}
 
@@ -21,9 +31,13 @@ Statistics WEREvaluator::map(const Sample& sample) const {
 
   // initialize
 
-  int dp[len_ref + 1][len_hyp + 1];
-  for (int i = 0; i <= len_ref; ++i) dp[i][0] = i;
-  for (int j = 1; j <= len_hyp; ++j) dp[0][j] = j;
+  double dp[len_ref + 1][len_hyp + 1];
+  for (int i = 0; i <= len_ref; ++i) {
+    dp[i][0] = w_del_ * static_cast<double>(i);
+  }
+  for (int j = 1; j <= len_hyp; ++j) {
+    dp[0][j] = w_ins_ * static_cast<double>(j);
+  }
 
   // calculate Levenshtein distance
 
@@ -33,12 +47,11 @@ Statistics WEREvaluator::map(const Sample& sample) const {
         dp[i][j] = dp[i - 1][j - 1];
       }
       else {
-        int sub = dp[i - 1][j - 1];
-        int ins = dp[i][j - 1];
-        int del = dp[i - 1][j];
-        int cur = sub < ins ? sub : ins;
-        cur = cur < del ? cur : del;
-        dp[i][j] = 1 + cur;
+        double sub = w_sub_ + dp[i - 1][j - 1];
+        double ins = w_ins_ + dp[i][j - 1];
+        double del = w_del_ + dp[i - 1][j];
+        double tmp = sub < ins ? sub : ins;
+        dp[i][j] = tmp < del ? tmp : del;
       }
     }
   }

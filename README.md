@@ -149,7 +149,9 @@ List of Metrics
 * **Word Error Rate**
     * Identifier: `WER`
     * Parameters:
-        * None
+        * `substitute`: weight of substituting ref/hyp words (default: `1.0`)
+        * `insert`: weight of inserting a hyp word (default: `1.0`)
+        * `delete`: weight of deleting a hyp word (default: `1.0`)
     * Statistics:
         * `distance`: cumulative Levenshtein distance for each evaluation sample.
         * `samples`: number of evaluation samples.
