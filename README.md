@@ -57,63 +57,69 @@ to compute statistical significance of 1st hypothesis against 2nd hypothesis.
 
 For example, we use a small example set described below:
 
-    ref.tok:
+    data/ref:
+    a b c d e
     a b c d e
     a b c d e
     a b c d e
 
-    hyp1.tok:
+    data/hyp1:
+    a b c d e
     a b c d e f
-    a b c d e
     a c d e
+    a b x d e
 
-    hyp2.tok:
+    data/hyp2:
     a b c d e
     a b c d e f g
-    a c d e
+    a b c d e
+    a b x d e
 
 Then, we type below example commands and get results:
 
-    $ bin/mteval-corpus -e BLEU RIBES -r ref.tok -h hyp1.tok
-    BLEU=0.796902	RIBES=0.976918
+    $ cd /path/to/mteval
+    $ build/bin/mteval-corpus -e BLEU RIBES -r data/ref -h data/hyp1
+    BLEU=0.666113	RIBES=0.969124
 
-    $ bin/mteval-sentence -e BLEU RIBES -r ref.tok -h hyp1.tok
-    BLEU=0.759836	RIBES=0.955443
+    $ build/bin/mteval-sentence -e BLEU RIBES -r data/ref -h data/hyp1
     BLEU=1.000000	RIBES=1.000000
+    BLEU=0.759836	RIBES=0.955443
     BLEU=0.000000	RIBES=0.975310
+    BLEU=0.000000	RIBES=0.945742
 
-    $ bin/mteval-pairwise -i 1000 -s 100 -e BLEU RIBES -r ref.tok -h hyp1.tok hyp2.tok 
-    BLEU: p=0.004000 (996/1000)	RIBES: p=0.009000 (991/1000)
+    $ build/bin/mteval-pairwise -i 1000 -s 100 -e BLEU RIBES -r data/ref -h data/hyp{1,2}
+    BLEU: p=0.986000 (14/1000) RIBES: p=0.089000 (911/1000)
 
 (Note that results of `mteval-pairwise` changes randomly with a certain range)
 
 Some evaluation metrics have parameters (e.g. maximum n-gram, or smoothing for BLEU).
 You may set these parameters using `:param=value` notation:
 
-    $ bin/mteval-corpus -e BLEU:ngram=5:smooth=1 -r ref.tok -h hyp1.tok
-    BLEU=0.805196
+    $ build/bin/mteval-corpus -e BLEU:ngram=5:smooth=1 -r data/ref -h data/hyp1
+    BLEU=0.676009
 
-    $ bin/mteval-corpus -e BLEU:smooth=1 -r ref.tok -h hyp1.tok
-    BLEU=0.819619
+    $ build/bin/mteval-corpus -e BLEU:smooth=1 -r data/ref -h data/hyp1
+    BLEU=0.696471
 
 Omitted parameters are assumed as default value.
 
 If you need to obtain inner statistics of each evaluation metrics,
 you can use `--output-stats` option for `mteval-corpus` and `mteval-sentence`:
 
-    $ bin/mteval-corpus --output-stats -e BLEU -r ref.tok -h hyp1.tok | tr '\t' '\n'
-    BLEU=0.796902
-    BLEU:len:hyp=15
-    BLEU:len:ref=15
-    BLEU:ngram:1:hyp=15
-    BLEU:ngram:1:match=14
-    BLEU:ngram:2:hyp=12
-    BLEU:ngram:2:match=10
-    BLEU:ngram:3:hyp=9
+    $ build/bin/mteval-corpus --output-stats -e BLEU -r data/ref -h data/hyp1 \
+      | tr '\t' '\n'
+    BLEU=0.666113
+    BLEU:len:hyp=20
+    BLEU:len:ref=20
+    BLEU:ngram:1:hyp=20
+    BLEU:ngram:1:match=18
+    BLEU:ngram:2:hyp=16
+    BLEU:ngram:2:match=12
+    BLEU:ngram:3:hyp=12
     BLEU:ngram:3:match=7
-    BLEU:ngram:4:hyp=6
+    BLEU:ngram:4:hyp=8
     BLEU:ngram:4:match=4
-    BLEU:samples=3
+    BLEU:samples=4
 
 Type `mteval-*** --help` to see more information for each command.
 
