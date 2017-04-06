@@ -1,4 +1,4 @@
-mteval Toolkit
+MTEval Toolkit
 ==============
 
 `MTEval` - Collection of evaluation metrics and algorithms for machine translation.
@@ -17,24 +17,34 @@ If you used `MTEval` toolkit, please refer this software on your document with b
 Install
 -------
 
-You need following tools to build `mteval` implementations.
-* `GCC 4.7` or later
-* `Boost 1.49` or later
-* `autotools`
+`MTEval` depends on below libraries:
+* `Boost 1.48` or later
 
-You simply run below:
+And uses below toolkit to build libraries and executalbes:
+* `CMake 3.1.0` or later
+
+First, we make a root directory of the build tree:
 
     $ cd /path/to/mteval
-    $ autoreconf -i
-    $ ./configure
-    $ make
-    $ (sudo) make install
+    $ mkdir build
+    $ cd build
+
+Then we build the tool:
+
+    $ cmake ..
+    $ make -j <threads>
+
+And optionally you can run unit tests:
+
+    $ make test
+
+All executables (see next section) are stored in the `build/bin` directory.
 
 
 Usage
 -----
 
-MTEval now have 3 types of evaluation algorithm:
+MTEval currently have 3 executables:
 * `mteval-corpus` - corpus-wise evaluation
 * `mteval-sentence` - sentence-wise evaluation
 * `mteval-pairwise` - pairwise bootstrap resampling
@@ -64,15 +74,15 @@ For example, we use a small example set described below:
 
 Then, we type below example commands and get results:
 
-    $ mteval-corpus -e BLEU RIBES -r ref.tok -h hyp1.tok
+    $ bin/mteval-corpus -e BLEU RIBES -r ref.tok -h hyp1.tok
     BLEU=0.796902	RIBES=0.976918
 
-    $ mteval-sentence -e BLEU RIBES -r ref.tok -h hyp1.tok
+    $ bin/mteval-sentence -e BLEU RIBES -r ref.tok -h hyp1.tok
     BLEU=0.759836	RIBES=0.955443
     BLEU=1.000000	RIBES=1.000000
     BLEU=0.000000	RIBES=0.975310
 
-    $ mteval-pairwise -i 1000 -s 100 -e BLEU RIBES -r ref.tok -h hyp1.tok hyp2.tok 
+    $ bin/mteval-pairwise -i 1000 -s 100 -e BLEU RIBES -r ref.tok -h hyp1.tok hyp2.tok 
     BLEU: p=0.004000 (996/1000)	RIBES: p=0.009000 (991/1000)
 
 (Note that results of `mteval-pairwise` changes randomly with a certain range)
@@ -80,10 +90,10 @@ Then, we type below example commands and get results:
 Some evaluation metrics have parameters (e.g. maximum n-gram, or smoothing for BLEU).
 You may set these parameters using `:param=value` notation:
 
-    $ mteval-corpus -e BLEU:ngram=5:smooth=1 -r ref.tok -h hyp1.tok
+    $ bin/mteval-corpus -e BLEU:ngram=5:smooth=1 -r ref.tok -h hyp1.tok
     BLEU=0.805196
 
-    $ mteval-corpus -e BLEU:smooth=1 -r ref.tok -h hyp1.tok
+    $ bin/mteval-corpus -e BLEU:smooth=1 -r ref.tok -h hyp1.tok
     BLEU=0.819619
 
 Omitted parameters are assumed as default value.
@@ -91,7 +101,7 @@ Omitted parameters are assumed as default value.
 If you need to obtain inner statistics of each evaluation metrics,
 you can use `--output-stats` option for `mteval-corpus` and `mteval-sentence`:
 
-    $ mteval-corpus --output-stats -e BLEU -r ref.tok -h hyp1.tok | sed 's/\t/\n/g'
+    $ bin/mteval-corpus --output-stats -e BLEU -r ref.tok -h hyp1.tok | tr '\t' '\n'
     BLEU=0.796902
     BLEU:len:hyp=15
     BLEU:len:ref=15
