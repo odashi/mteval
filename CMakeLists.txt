@@ -21,7 +21,7 @@ find_package(Boost 1.48.0 REQUIRED COMPONENTS
   unit_test_framework)
 MESSAGE("-- Boost include directory: " ${Boost_INCLUDE_DIRS})
 
-include_directories(${CMAKE_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
 
 enable_testing()
 
