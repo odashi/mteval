@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-project(mteval)
+project(mteval VERSION 1.0.0.0 LANGUAGES CXX)
 
 set(BUILD_SHARED_LIBS ON)
 
