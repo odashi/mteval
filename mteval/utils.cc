@@ -52,11 +52,7 @@ double Utility::calculateLevenshteinDistance(
   int len_hyp = hyp.size();
 
   // initialize DP table as a matrix with len_ref + 1 rows and len_hyp + 1 columns
-  vector< vector<double> > dp;
-  dp.resize(len_ref + 1);
-  for (int i = 0; i <= len_ref; i++) {
-    dp[i].resize(len_hyp + 1);
-  }
+  vector< vector<double> > dp(len_ref + 1, vector<double>(len_hyp + 1));
 
   for (int i = 0; i <= len_ref; ++i) {
     dp[i][0] = del_weight * static_cast<double>(i);
