@@ -1,5 +1,6 @@
-#define BOOST_TEST_MAIN
-#include <boost/test/included/unit_test.hpp>
+#define BOOST_TEST_MODULE statistics_test
+#define BOOST_TEST_DYN_LINK
+#include <boost/test/unit_test.hpp>
 
 #include <mteval/Statistics.h>
 
