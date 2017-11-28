@@ -7,6 +7,8 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include <algorithm>
+#include <cctype>
 #include <stdexcept>
 
 using namespace std;
@@ -31,14 +33,17 @@ shared_ptr<Evaluator> EvaluatorFactory::create(const string & spec) {
     try { p.real_val = stod(keyval[1]); } catch (...) { p.real_val = 0; }
     params.push_back(p);
   }
+
   string name = settings[0];
-  if (name == "BLEU")
+  transform(name.begin(), name.end(), name.begin(), ::tolower);
+
+  if (name == "bleu")
     return shared_ptr<Evaluator>(new BLEUEvaluator(params));
-  if (name == "NIST")
+  if (name == "nist")
     return shared_ptr<Evaluator>(new NISTEvaluator(params));
-  if (name == "RIBES")
+  if (name == "ribes")
     return shared_ptr<Evaluator>(new RIBESEvaluator(params));
-  if (name == "WER")
+  if (name == "wer")
     return shared_ptr<Evaluator>(new WEREvaluator(params));
   throw runtime_error("invalid evaluator specification \"" + spec + "\"");
 }
